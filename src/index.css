@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    @font-face {
+        font-family: 'Lekton';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(../public/assets/fonts/lekton/Lekton-Regular.ttf)
+    }
+    @font-face {
+        font-family: 'Lekton';
+        font-style: italic;
+        font-weight: 400;
+        font-display: swap;
+        src: url(../public/assets/fonts/lekton/Lekton-Italic.ttf)
+    }
+    @font-face {
+        font-family: 'Lekton';
+        font-style: normal;
+        font-weight: bold;
+        font-display: swap;
+        src: url(../public/assets/fonts/lekton/Lekton-Bold.ttf)
+    }
+}
