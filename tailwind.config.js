@@ -1,11 +1,21 @@
 /** @type {import('tailwindcss').Config} */
+
+
 export default {
+	darkMode: 'class',
 	content: [],
 	purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
 	theme: {
 		extend: {
+			screens: {
+				'xlg': "2350px",
+				'lg2': '2000px',
+				'lg': '1800px'
+			},
 			boxShadow: {
-				'glow': '0px 0px 24px 35px rgba(0,0,0,0.3)'
+				'glow': '0px 0px 4px 2px rgba(0,0,0,0.3)',
+				'glow-lg': '0px 0px 16px 8px rgba(0,0,0,0.3)',
+				'inner-button': ' inset rgba(102,51,153,01) 0px 0px 2px 1px'
 			}
 		},
 		fontFamily:
@@ -27,6 +37,8 @@ export default {
 				'800': '#673d9a',
 				'900': '#56337f',
 				'950': '#362055',
+				'1000': '#0f0918',
+				'1050': '#08050d',
 			},
 			dark: {
 				100: "#d5d9d9",
@@ -171,6 +183,9 @@ export default {
 			}
 		}	
 	},
-	plugins: [],
+	plugins: [
+		require('tailwind-scrollbar')
+	],
 }
+
 

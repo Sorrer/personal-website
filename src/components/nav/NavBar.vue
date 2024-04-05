@@ -8,7 +8,7 @@
 
 <template>
 
-    <div clas="bg-gray-800  ">
+    <div clas="bg-gray-800  z-100">
         <!-- <div class="px-6 flex flex-wrap items-center justify-between mx-auto py-3">
             <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
@@ -25,7 +25,7 @@
             </div>
         </div> -->
 
-        <div :class="sticky ? 'fixed' : ''" class="top-0 w-full h-fit items-centers text-center bg-background-nav overflow-hidden shadow-md shadow-background-navbutton">
+        <div :class="sticky ? 'fixed' : ''" class="z-10 top-0 w-full h-fit items-centers text-center bg-background-nav overflow-hidden shadow-md shadow-background-navbutton">
              <ul class="inline-block items-center h-fit">
                 <NavBarItem :selected="true" nav-text="summary"/>
                 <NavBarItem nav-text="skills"/>
