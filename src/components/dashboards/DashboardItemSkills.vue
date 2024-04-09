@@ -35,9 +35,19 @@ const anchor = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 useResizeObserver (container, () => {
     calculatePositions();
+
 })
+
+window.addEventListener('resize', () => {calculatePositions()})
+
+
 onMounted(()=> {
 
+    // Add twice to fill in the space
+    for(let item of props.list)
+    {
+        items.value.push({name: item, position: {x:0,y:0}})
+    }
     for(let item of props.list)
     {
         items.value.push({name: item, position: {x:0,y:0}})
@@ -133,16 +143,13 @@ function calculatePositions()
         items.value[i].selected = target === i
     }
 
-    console.log(distances); 
-    console.log(posX); 
-
 }
 
 
 </script>
 
 <template>
-    <div class="w-full h-full relative flex overflow-hidden" ref="container">
+    <div class="w-full h-full relative flex overflow-hidden select-none" ref="container">
         <div class="absolute w-full h-full overflow-hidden inline-table">
             <div class="flex items-center justify-center"> 
                 <p class=" text-primary">

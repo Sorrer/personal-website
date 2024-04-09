@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import IconCOGSLogo from '@/assets/icons/IconCOGSLogo.vue';
-import IconRutgersLogo from '@/assets/icons/IconRutgersLogo.vue';
-import IconLightRiverLogo from '@/assets/icons/IconLightRiverLogo.vue';
 
 
 
@@ -37,14 +34,6 @@ import IconLightRiverLogo from '@/assets/icons/IconLightRiverLogo.vue';
         <div class="flex flex-wrap w-full h-full items-center justify-center p-2">
             <div class="w-full md:w-[27%] px-8 relative flex-col aspect-square h-auto min-w-10 m-2 bg-studio-100 border border-accent shadow-glow shadow-accent dark:bg-studio-1000 flex items-center justify-center  rounded-lg hover:bg-studio-600 dark:hover:bg-accent hover:cursor-pointer select-none">
                 <h1 class="text-lg text-primary">
-                    Rutgers
-                </h1>
-                <p>
-                    Bachelor of Sciences
-                </p>
-            </div>
-            <div class="w-full md:w-[27%] px-8 relative flex-col aspect-square h-auto min-w-10 m-2 bg-studio-100 border border-accent shadow-glow shadow-accent dark:bg-studio-1000 flex items-center justify-center  rounded-lg hover:bg-studio-600 dark:hover:bg-accent hover:cursor-pointer select-none">
-                <h1 class="text-lg text-primary">
                     Creation of Games Society
                 </h1>
                 <p>
@@ -57,6 +46,14 @@ import IconLightRiverLogo from '@/assets/icons/IconLightRiverLogo.vue';
                 </h1>
                 <p class="text-s">
                     Lead fullstack & Dev ops
+                </p>
+            </div>
+            <div class="w-full md:w-[27%] px-8 relative flex-col aspect-square h-auto min-w-10 m-2 bg-studio-100 border border-accent shadow-glow shadow-accent dark:bg-studio-1000 flex items-center justify-center  rounded-lg hover:bg-studio-600 dark:hover:bg-accent hover:cursor-pointer select-none">
+                <h1 class="text-lg text-primary">
+                    Rutgers
+                </h1>
+                <p>
+                    Bachelor of Sciences
                 </p>
             </div>
         </div>

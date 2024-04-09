@@ -10,7 +10,10 @@ export default {
 			screens: {
 				'xlg': "2350px",
 				'lg2': '2000px',
-				'lg': '1800px'
+				'lg1.5': '1600px',
+				'lg': '1200px',
+				'md': '900px',
+				'md2': '1200px'
 			},
 			boxShadow: {
 				'glow': '0px 0px 4px 2px rgba(0,0,0,0.3)',
