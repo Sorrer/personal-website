@@ -4,7 +4,6 @@ import IconBarChart from '../../assets/icons/IconBarChart.vue'
 import IconOffice from '../../assets/icons/IconOffice.vue'
 import IconHardwareChip from '../../assets/icons/IconHardwareChip.vue'
 import {useThemeStore} from '../../stores/themeStore'
-import { onMounted, watch } from 'vue'
 
 
 const props = defineProps<{
@@ -55,7 +54,6 @@ const navBarItems : NavBarItem[] = [
                         <IconLightBulb class="w-[75%] h-[75%] "></IconLightBulb>
                 </div>
             </div>
-
             <template v-for="i in navBarItems" :key="i.name">
 
                 <div class=" w-12 h-12  mb-4">

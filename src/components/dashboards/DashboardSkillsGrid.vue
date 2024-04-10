@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import IconHexagon from '../../assets/icons/IconHexagon.vue'
-
 const props = defineProps<{
     items : string[]
 }>();
@@ -11,7 +9,7 @@ const props = defineProps<{
 <template>
     <div class="w-full h-fit flex flex-wrap justify-center items-center">
         <template v-for="i,j in items" :key="j">
-            <div class="bg-gradient-to-tr from-studio-975 to-studio-1050 border border-studio-950 rounded-lg w-32 p-2 m-2 text-[white] basis-1/6">
+            <div class="bg-studio-100 dark:bg-gradient-to-tr dark:from-studio-975 dark:to-studio-1050  border-studio-400 border-2 dark:border-studio-950 rounded-lg w-32 p-2 m-2 dark:text-[white] basis-1/6">
                 {{ i }}
             </div>
         </template>
