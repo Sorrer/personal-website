@@ -157,8 +157,8 @@ onMounted(() =>{
 	
 	<div class="main h-full min-h-screen bg-gradient-to-br md:pl-16" >
 		<div class="text-center font-bold dark:font-normal text-purple-900 dark:text-sand-100 font-lekton  ">
-			<NavBar class="md:hidden"></NavBar> <!-- For top bar fdding-->
-			<NavBar class="md:hidden" :sticky="true"></NavBar> 
+			<!-- <NavBar class="md:hidden"></NavBar> For top bar fdding-->
+			<!-- <NavBar class="md:hidden" :sticky="true"></NavBar>  -->
 			<div  ref="overview"  id="overview" class="flex flex-wrap lg:flex-nowrap lg:min-h-[70vh]">
 				<div class="lg:w-[30vh]"></div>
 				<div class="flex-auto items-center inline-block w-full m-10 lg:max-w-96 min-h-80 lg:mx-28  p-4 bg-studio-300 dark:bg-purple-900 card border border-primary shadow-glow-lg rounded-b-lg shadow-accent bg-gradient-to-tr from-purple-200 to-purple-100 dark:from-purple-900 dark:to-purple-800" >
@@ -296,6 +296,9 @@ onMounted(() =>{
 								Led a strong e-board of 10+ officers that helped grow the club to its glory
 							</li>
 						</ul>
+					</div>
+					<div class="p-8">
+
 					</div>
 				</div>
 			</div>
