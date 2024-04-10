@@ -27,7 +27,23 @@ const items = ref<CircleData[]>([
 ]) 
 
 
+function shuffle<T>(array : T[]) {
+  let currentIndex = array.length;
 
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
 
 
 const selectedIndex = ref(Math.floor(Math.random() * items.value.length));
@@ -43,12 +59,15 @@ window.addEventListener('resize', () => {calculatePositions()})
 
 onMounted(()=> {
 
+    // Shuffle list to make page unique
+    const newItems = shuffle([... props.list]);
+
     // Add twice to fill in the space
-    for(let item of props.list)
+    for(let item of newItems)
     {
         items.value.push({name: item, position: {x:0,y:0}})
     }
-    for(let item of props.list)
+    for(let item of newItems)
     {
         items.value.push({name: item, position: {x:0,y:0}})
     }
@@ -152,13 +171,13 @@ function calculatePositions()
     <div class="w-full h-full relative flex overflow-hidden select-none" ref="container">
         <div class="absolute w-full h-full overflow-hidden inline-table">
             <div class="flex items-center justify-center"> 
-                <p class=" text-primary">
+                <p class=" text-primary p-8">
                     {{ title }}
                 </p>
             </div>
-            <div class="absolute bottom-0 h-[12pxx] w-full bg-[rgba(255,255,255,0.04)] rounded-b-lg hover:bg-primary hover:cursor-pointer select-none">
+            <!-- <div class="absolute bottom-0 h-[12pxx] w-full bg-[rgba(255,255,255,0.04)] rounded-b-lg hover:bg-primary hover:cursor-pointer select-none">
                 [ more ]
-            </div>
+            </div> -->
             <template v-for="i,j of items" :key="j">
                 <div 
                     class="circle absolute w-[140px] h-[140px]" 

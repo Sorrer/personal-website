@@ -16,9 +16,13 @@ export default {
 				'md2': '1200px'
 			},
 			boxShadow: {
+				'glow-sm': '0px 0px 2px 1px rgba(0,0,0,0.3)',
 				'glow': '0px 0px 4px 2px rgba(0,0,0,0.3)',
 				'glow-lg': '0px 0px 16px 8px rgba(0,0,0,0.3)',
 				'inner-button': ' inset rgba(102,51,153,01) 0px 0px 2px 1px'
+			},
+			'dropShadow': {
+				'glow': '0 0 0.75rem  rgba(102,51,153,01)'
 			}
 		},
 		fontFamily:
@@ -40,6 +44,7 @@ export default {
 				'800': '#673d9a',
 				'900': '#56337f',
 				'950': '#362055',
+				'975': '#190f27',
 				'1000': '#0f0918',
 				'1050': '#08050d',
 			},

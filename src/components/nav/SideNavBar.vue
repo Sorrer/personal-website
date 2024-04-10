@@ -4,6 +4,12 @@ import IconBarChart from '../../assets/icons/IconBarChart.vue'
 import IconOffice from '../../assets/icons/IconOffice.vue'
 import IconHardwareChip from '../../assets/icons/IconHardwareChip.vue'
 import {useThemeStore} from '../../stores/themeStore'
+import { onMounted, watch } from 'vue'
+
+
+const props = defineProps<{
+    selectedHref?: string
+}>()
 
 const themeStore = useThemeStore();
 
@@ -44,7 +50,7 @@ const navBarItems : NavBarItem[] = [
             <!-- Toggle Switch -->
             
             <div class=" w-12 h-8  mb-4">
-                    <div @click="themeStore.toggleTheme()" class="flex items-center justify-center w-full h-full  rounded-full shadow-inner-button 
+                    <div @click="themeStore.toggleTheme()" class="cursor-pointer flex items-center justify-center w-full h-full  rounded-full shadow-inner-button 
                     dark:hover:bg-studio-50 dark:bg-studio-800 hover:bg-studio-800 bg-studio-50  stroke-primary hover:stroke-primary light-button">
                         <IconLightBulb class="w-[75%] h-[75%] "></IconLightBulb>
                 </div>
@@ -54,8 +60,8 @@ const navBarItems : NavBarItem[] = [
 
                 <div class=" w-12 h-12  mb-4">
                     <a :href="i.href" :title="i.name" class="flex items-center justify-center w-full h-full  
-                    shadow-inner-button hover:bg-primary dark:hover:bg-primary hover:stroke-accent dark:bg-studio-800
-                      bg-studio-50  stroke-primary fill-primary  light-button rounded-lg">
+                      border-2 border-purple-600 hover:bg-primary dark:hover:bg-primary hover:stroke-accent hover:fill-accent dark:bg-studio-800
+                      bg-studio-50  stroke-primary fill-primary  rounded-lg" :class=" selectedHref === i.href ? 'bg-purple-400 dark:bg-purple-400 dark:stroke-studio-300 dark:fill-studio-300 stroke-purple-700 fill-purple-700 shadow-glow shadow-primary' : 'shadow-glow-sm shadow-purple-600'">
                         <IconBarChart v-if="i.icon === 'overview'" class="w-[75%] h-[75%] "></IconBarChart>
                         <IconOffice v-if="i.icon === 'experience'" class="w-[75%] h-[75%] "></IconOffice>
                         <IconHardwareChip v-if="i.icon === 'skills'" class="w-[75%] h-[75%] "></IconHardwareChip>
@@ -72,26 +78,4 @@ const navBarItems : NavBarItem[] = [
 </template>
 
 <style lang="scss">
-.light-button
-{
-    cursor: pointer;
-    stroke: white;
-    transition: all 0.1s ease-in-out;
-
-    &:hover {
-        stroke: black;
-    }
-}
-
-.dark-button
-{
-    cursor: pointer;
-    stroke: black;
-    transition: all 0.1s ease-in-out;
-
-    &:hover {
-        stroke: white;
-    }
-}
-
 </style>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import DividerBar from "./components/DividerBar.vue";
+import DividerLine from "./components/DividerLine.vue";
 
 import NavBar from './components/nav/NavBar.vue'
 import SideNavBar from './components/nav/SideNavBar.vue'
 import { useThemeStore } from './stores/themeStore';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, type Ref } from 'vue';
+import DashboardHexGrid from './components/dashboards/DashboardHexGrid.vue'
 import DashboardItemSkills from './components/dashboards/DashboardItemSkills.vue'
 import DashBoardHoverOver from './components/dashboards/DashboardHoverOver.vue'
 import {HEXAGON_VERTEX, HEXAGON_VERTEX_DARK} from './helpers/shaders/hexagons';
@@ -12,9 +14,9 @@ import { useResizeObserver } from '@vueuse/core';
 import IconAvatar from './assets/icons/IconAvatar.vue'
 import IconCodeDownload from './assets/icons/IconCodeDownload.vue'
 
-
-const skillsTechnology = ref(['Typescript', 'NodeJS', 'C#', 'C++', 'C', 'Kafka', 'PostgreSQL', 'REST', 'Websockets', 'Web Dev', 'Game Dev']);
-const skillsGeneral = ref(['Leadership', 'Mentor', 'Organization', 'Project Management', 'Problem Solving', 'Innovative', 'Time Management']);
+const resumePDF = new URL('./assets/resume/Alexander Xie Resume.pdf', import.meta.url).href;
+const skillsTechnology = ref(['Typescript', 'NodeJS', 'C#', 'C++', 'C', 'Kafka', 'PostgreSQL', 'REST', 'Websockets', 'Web Dev', 'Vue3', 'Game Dev', 'Unity', 'Java', 'Github Actions', 'Gitlab CI/CD', 'Kubernetes', 'Docker', 'Services', 'Linux']);
+const skillsGeneral = ref(['Leadership', 'Mentor', 'Organization', 'Project Management', 'Problem Solving', 'Innovative', 'Time Management', 'CI/CD', 'DevOps', 'Scrum', 'Sprints', 'Testing']);
 
 function getX()
 {
@@ -29,10 +31,9 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 const background = ref<HTMLElement | null>(null);
 
 onMounted(() =>{
-	console.log(canvas);
 	if(canvas.value !== null) useResizeObserver(canvas.value, () => {
 		//@ts-ignore
-		console.log(canvas.value?.setSize(1,1)) // Some how sets the actual size
+		canvas.value?.setSize(1,1) // Some how sets the actual size
 	})
 	
 })
@@ -46,6 +47,78 @@ watch(() => themeStore.theme, () => {
 	scrollbarBackground.value = themeStore.theme === "dark" ? "#0f0f0f" : "#e4ddf7";
 	shaderCode.value = themeStore.theme === "dark" ? HEXAGON_VERTEX_DARK : HEXAGON_VERTEX;
 });
+
+interface SectionTags {
+	[href: string] : {
+		element: Ref<HTMLElement | undefined>
+	}
+}
+
+const skills = ref<HTMLElement>();
+const experience = ref<HTMLElement>();
+const overview = ref<HTMLElement>();
+
+const href : SectionTags= {
+	'skills': {
+		element: skills
+	},
+	'experience': {
+		element: experience
+	},
+	'overview': {
+		element: overview
+	}
+}
+
+
+const selectedHref = ref<string>("");
+
+// Automatically detect hrefs
+
+function updateHrefs()
+{
+
+    let closestDistance = 9999999999999;
+    let index = '';
+
+
+    for(let i in href)
+    {
+        const element = href[i].element.value;
+
+        if(element)
+        {
+			console.log(i + " " + element.getBoundingClientRect().height)
+			const eleTop = element.getBoundingClientRect().top - (element.getBoundingClientRect().height/3)
+            if(eleTop < 0)
+            {
+                const distance = Math.abs(eleTop);
+
+                if(distance < closestDistance )
+                {
+                    index = i;
+                    closestDistance = distance;
+                }
+            }
+        }
+        else
+        {
+            console.error("Could not find href " + href );
+            continue;
+        }
+    }
+
+
+	selectedHref.value = '#'+index;
+	if(window.location.hash != '#'+index) {
+		window.history.pushState(index, '', '#'+index);
+	}
+}
+
+onMounted(() =>{
+	updateHrefs();
+    addEventListener('scroll', updateHrefs)
+})
 
 </script>
 
@@ -71,13 +144,13 @@ watch(() => themeStore.theme, () => {
 		<p>-- {{ getX() }} --</p> <!-- TODO: Add actual data here -->
 	</div>
 
-	<SideNavBar class="hidden"/>
+	<SideNavBar :selected-href="selectedHref" class="hidden"/>
 	
 	<div class="main h-full min-h-screen bg-gradient-to-br md:pl-16" >
 		<div class="text-center font-bold dark:font-normal text-purple-900 dark:text-sand-100 font-lekton  ">
 			<NavBar class="md:hidden"></NavBar> <!-- For top bar fdding-->
 			<NavBar class="md:hidden" :sticky="true"></NavBar> 
-			<div id="overview" class="flex flex-wrap lg:flex-nowrap lg:min-h-[70vh]">
+			<div  ref="overview"  id="overview" class="flex flex-wrap lg:flex-nowrap lg:min-h-[70vh]">
 				<div class="lg:w-[30vh]"></div>
 				<div class="flex-auto items-center inline-block w-full m-10 lg:max-w-96 min-h-80 lg:mx-28  p-4 bg-studio-300 dark:bg-purple-900 card border border-primary shadow-glow-lg rounded-b-lg shadow-accent bg-gradient-to-tr from-purple-200 to-purple-100 dark:from-purple-900 dark:to-purple-800" >
 					
@@ -105,7 +178,7 @@ watch(() => themeStore.theme, () => {
 					<div class="p-6"></div>
 					<div class="w-full align-bottom flex-1 flex-wrap justify-center"> 
 						<a class="self-end text-lg pb-4 flex items-center justify-center">
-							<a class="flex  items-center justify-center cursor-pointer hover:text-bright-500 hover:stroke-bright-500 dark:hover:stroke-bright-500 stroke-accent dark:stroke-primary  pr-2 hover:border hover:border-bright-500 border border-primary bg-gradient-to-bl from-studio-800 to-studio-950 hover:from-studio-1000 hover:to-studio-1050 select-none shadow-glow hover:shadow-glow-lg shadow-primary hover:shadow-bright-500 ">
+							<a target="_blank" href="/assets/resume/Alexander Xie Resume.pdf" class="flex  items-center justify-center cursor-pointer hover:text-bright-500 hover:stroke-bright-500 dark:hover:stroke-bright-500 stroke-accent dark:stroke-primary  pr-2 hover:border hover:border-bright-500 border border-primary bg-gradient-to-bl from-studio-50 to-studio-200 dark:from-studio-800 dark:to-studio-950 hover:from-studio-1000 hover:to-studio-1050 dark:hover:from-studio-1000 dark:hover:to-studio-1050 select-none shadow-glow hover:shadow-glow-lg shadow-primary hover:shadow-bright-500 ">
 								<IconCodeDownload class="w-8 h-8 m-2 mt-1 " />
 								<p>
 									Resume Download 
@@ -140,7 +213,7 @@ watch(() => themeStore.theme, () => {
 
 			<div class="flex justify-center items-center py-[10vh] left-16 right-0 ">
 				<div class="relative w-[80%] lg:ml-16 min-h-[90vh] border border-primary bg-studio-200 shadow-glow shadow-accent m-2 dark:bg-purple-900 rounded-xl">
-					<div id="experience" class="absolute -top-10"></div>
+					<div ref="experience" id="experience" class="absolute -top-10  h-full"></div>
 					<h1>
 						Experience
 					</h1>
@@ -159,26 +232,25 @@ watch(() => themeStore.theme, () => {
 
 			<div  class="flex justify-center items-center py-[10vh] left-16 right-0 ">
 				<div class="relative w-[80%] lg:ml-16 min-h-[90vh] border border-primary bg-studio-200 shadow-glow shadow-accent m-2 dark:bg-purple-900 rounded-xl">
-					<div id="skills" class="absolute -top-10"></div>
-					<h1>
-						Skills
-					</h1>
+					<div ref="skills" id="skills" class="absolute -top-10 h-full"></div>
+					<div class="flex w-full h-full flex-col">
+						<h1 class="text-4xl p-4 text-primary">
+							Skills
+						</h1>
 
-					<h2>
-						Technology
-					</h2>
-
-					<p v-for="i,j in skillsTechnology" :key="j">
-						{{ i }}
-					</p>
-
-					<h2>
-						General Skills
-					</h2>
-
-					<p v-for="i,j in skillsGeneral" :key="j">
-						{{ i }}
-					</p>
+						<DividerLine></DividerLine>
+						
+						<h2 class="text-4xl p-4">
+							Technology
+						</h2>
+						<DashboardHexGrid :items="skillsTechnology"></DashboardHexGrid>
+						
+						<h2 class="text-4xl p-4">
+							General
+						</h2>
+						
+						<DashboardHexGrid :items="skillsGeneral"></DashboardHexGrid>
+					</div>
 
 				</div>
 			</div>
