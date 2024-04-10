@@ -225,7 +225,7 @@ onMounted(() =>{
 				<div class="relative w-[80%] lg:ml-16 min-h-[90vh] border border-primary bg-studio-200 shadow-glow shadow-accent m-2 dark:bg-purple-900 rounded-xl">
 					<div ref="experience" id="experience" class="absolute -top-10  h-full"></div>
 					<h1 class="text-4xl p-4 pt-16 text-purple-700 dark:text-primary">
-						Experience
+						Experiences
 					</h1>
 
 					<DividerLine></DividerLine>
