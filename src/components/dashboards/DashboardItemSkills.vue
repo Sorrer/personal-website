@@ -169,7 +169,7 @@ function calculatePositions()
 
 <template>
     <div class="w-full h-full relative flex overflow-hidden select-none" ref="container">
-        <div class="absolute w-full h-full overflow-hidden inline-table">
+        <a href="#skills" class="absolute w-full h-full overflow-hidden inline-table hover:bg-studio-600 dark:hover:bg-purple-800 cursor-pointer">
             <div class="flex items-center justify-center"> 
                 <p class=" text-primary p-8">
                     {{ title }}
@@ -190,7 +190,7 @@ function calculatePositions()
                     </div>
                 </div>
             </template>
-        </div>
+        </a>
         <div class="flex grow items-center justify-center">
             <div class="w-[140px] h-[140px] bg-none" ref="anchor">
             </div>
