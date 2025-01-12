@@ -46,7 +46,7 @@
                     LightRiver
                 </h1>
                 <h2 class="text-s">
-                    Lead fullstack & Dev ops
+                    Lead Software Engineer
                 </h2>
             </a>
             <a href="#experience" class="w-full md:w-[27%] px-8 relative flex-col aspect-square h-auto min-w-10 m-2 bg-studio-100 border border-accent shadow-glow shadow-accent dark:bg-studio-1000 flex items-center justify-center  rounded-lg hover:bg-studio-600 dark:hover:bg-accent hover:cursor-pointer select-none">

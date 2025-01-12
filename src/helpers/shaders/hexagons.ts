@@ -76,7 +76,7 @@ vec4 calcHexInfo(vec2 uv)
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    vec2 uv = 20. * (2. * fragCoord - iResolution.xy) / iResolution.y;
+    vec2 uv = 12. * (2. * fragCoord - iResolution.xy) / iResolution.y;
     
     
     vec4 hexInfo = calcHexInfo(uv);

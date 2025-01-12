@@ -15,6 +15,7 @@ import IconAvatar from './assets/icons/IconAvatar.vue'
 import IconCodeDownload from './assets/icons/IconCodeDownload.vue'
 import IconRightArrow from './assets/icons/IconRightArrow.vue'
 import { useHead } from "@unhead/vue";
+import IconResume from "./assets/icons/IconResume.vue";
 
 
 
@@ -146,16 +147,15 @@ onMounted(() =>{
 <!-- <div class="fixed rotate top-96 left-3 lg:left-6 text-sand-100 text-xs font-lekton ">
 		<p>Alexander Xie @ Software Engineer </p>
 	</div> -->
-	<div class="fixed rotate top-96 left-3 lg:left-20 text-primary  dark:text-accent text-xs font-lekton ">
+	<div class="fixed rotate top-96 left-3 lg:left-6 text-primary  dark:text-accent text-xs font-lekton ">
 		<p>Alexander Xie @ Software Engineer </p>
 	</div>
 	<div class="z-10 fixed counter-rotate bottom-32 right-3 lg:right-6 text-primary  dark:text-accent text-xs font-lekton">
 		<p>-- {{ getX() }} --</p> <!-- TODO: Add actual data here -->
 	</div>
 
-	<SideNavBar :selected-href="selectedHref" class="hidden"/>
 	
-	<div class="main h-full min-h-screen bg-gradient-to-br md:pl-16" >
+	<div class="main h-full min-h-screen bg-gradient-to-br " >
 		<div class="text-center font-bold dark:font-normal text-purple-900 dark:text-sand-100 font-lekton  ">
 			<!-- <NavBar class="md:hidden"></NavBar> For top bar fdding-->
 			<!-- <NavBar class="md:hidden" :sticky="true"></NavBar>  -->
@@ -173,6 +173,9 @@ onMounted(() =>{
 					<h1 class="font-lekton text-3xl font-bold text-left m-4 mb-0">Alexander Xie</h1>
 					<h1 class="text-xl font-medium text-left m-4 mt-0">Software Enginer</h1>
 					<p class="text-wrap m-4 text-left indent-">&Tab;Driven by a passion for technology and collaboration, I craft scalable solutions that empower projects and bring complex ideas to life.</p>
+					
+					
+
 					<h1 class="text-wrap m-4 text-left">Key values</h1>
 					<div class="w-full h-fit flex flex-col items-center">
 						<div class="flex w-fit h-fit flex-col items-start">
@@ -187,10 +190,10 @@ onMounted(() =>{
 					<div class="p-6"></div>
 					<div class="w-full align-bottom flex-1 flex-wrap justify-center"> 
 						<a class="self-end text-lg pb-4 flex items-center justify-center">
-							<a target="_blank" href="/assets/resume/Alexander Xie Resume.pdf" class="flex  items-center justify-center cursor-pointer hover:text-bright-500 hover:stroke-bright-500 dark:hover:stroke-bright-500 stroke-accent dark:stroke-primary  pr-2 hover:border hover:border-bright-500 border border-primary bg-gradient-to-bl from-studio-50 to-studio-200 dark:from-studio-800 dark:to-studio-950 hover:from-studio-1000 hover:to-studio-1050 dark:hover:from-studio-1000 dark:hover:to-studio-1050 select-none shadow-glow hover:shadow-glow-lg shadow-primary hover:shadow-bright-500 ">
-								<IconCodeDownload class="w-8 h-8 m-2 mt-1 " />
-								<p>
-									Resume Download 
+							<a target="_blank" href="/assets/resume/Alexander Xie Resume.pdf" class="flex  items-center justify-center cursor-pointer hover:text-bright-500 hover:fill-bright-500 dark:hover:stroke-bright-500  fill-primary pr-2 hover:border hover:border-bright-500 border border-primary bg-gradient-to-bl from-studio-50 to-studio-200 dark:from-studio-800 dark:to-studio-950 hover:from-studio-1000 hover:to-studio-1050 dark:hover:from-studio-1000 dark:hover:to-studio-1050 select-none shadow-glow hover:shadow-glow-lg shadow-primary hover:shadow-bright-500 ">
+								<IconResume class="w-8 m-2 mr-" />
+								<p class=" pr-2 text-xl">
+									My Resume 
 								</p>
 							</a>
 						</a>	
@@ -216,138 +219,9 @@ onMounted(() =>{
 				<div class="lg:w-[20vh]"></div>
 			</div>
 
-			<div class="py-[5vh]"></div>
-			
-			<DividerBar/>
 
-			<!-- Experiences -->
-			<div class="flex justify-center items-center py-[10vh] left-16 right-0 ">
-				<div class="relative w-[80%] lg:ml-16 min-h-[90vh] border border-primary bg-studio-200 shadow-glow shadow-accent m-2 dark:bg-purple-900 rounded-xl">
-					<div ref="experience" id="experience" class="absolute -top-10  h-full"></div>
-					<h1 class="text-4xl p-4 pt-16 text-purple-700 dark:text-primary">
-						Experiences
-					</h1>
-
-					<DividerLine></DividerLine>
-
-					<div class="w-full flex px-4 sm:px-16 md:px-32 pt-16 justify-start items-start flex-col">
-						<h1 class="text-3xl font-bold flex">
-							<IconRightArrow class="stroke-primary w-8 h-8"/>LightRiver Software
-						</h1>
-						<h2 class="text-lg text-purple-600 dark:text-purple-200 font-bold">
-						Lead Full stack and DevOps Engineer
-						</h2>
-						<h2 class=" text-purple-600 dark:text-purple-200">
-						Employed June 2022 -> Current
-						</h2>
-						<p class="pt-2 text-start">
-							At LightRiver Software, I spearheaded the development of an innovative full-stack application from the ground up, leveraging technologies such as TypeScript, Node.js, Fastify, and Vue.js to introduce a new revenue stream and enhance shareholder value. My leadership role also involved architecting efficient DevOps practices with GitLab CI/CD, mentoring a team of four, and driving projects forward with Agile methodologies to meet critical deadlines and quality standards.
-						</p>
-						<p class="py-2">
-							Key Developments
-						</p>
-
-						<ul class="pl-16 list-disc text-start">
-							<li>
-								Developed a seemless asynchronous backend architecture using message brokers with legacy support
-							</li>
-							<li>
-								Developed a new cutting edge GUI pathing way to new ways to invest into the product 
-							</li>
-							<li>
-								Introduced and develop CI/CD procedures using Gitlab CI/CD and Github Actions
-							</li>
-							<li>
-								Led and hired a team to support the prototype into production
-							</li>
-						</ul>
-					</div>
-
-					<div class="w-full flex px-4 sm:px-16 md:px-32 pt-16 justify-start items-start flex-col">
-						<h1 class="text-3xl font-bold flex">
-							<IconRightArrow class="stroke-primary w-8 h-8"/>Creation of Games Society 
-						</h1>
-						<h2 class="text-lg text-purple-600 dark:text-purple-200 font-bold">
-						President
-						</h2>
-						<h2 class=" text-purple-600 dark:text-purple-200">
-							President 2020 -> 2022
-						</h2>
-						<h2 class=" text-purple-600 dark:text-purple-200">
-							E-Board 2018 -> 2019
-						</h2>
-						<p class="pt-2 text-start">
-							At the time of 2020, Creation of Games Society (COGS), dissipated due to COVID. During this time I was the last remaining e-board member of the club, and had to build up the club from scratch with no resources. I grew the club up to 700 online members, with large in-person gatherings taking place after COVID.
-						</p>
-						<p class="pt-2">Explore the club at</p>
-						<a class="hover:underline hover:text-purple-100 text-primary" href="https://cogs.club/home">https://cogs.club/home</a>
-						<p class="py-2">
-							Key Developments
-						</p>
-
-						<ul class="pl-16 list-disc text-start">
-							<li>
-								Introdued new methods of teaching game development
-							</li>
-							<li>
-								Mentor many students to learn how to create games using Unity
-							</li>
-							<li>
-								Led a strong e-board of 10+ officers that helped grow the club to its glory
-							</li>
-						</ul>
-					</div>
-					<div class="p-8">
-
-					</div>
-				</div>
-			</div>
-			<DividerBar/>
-
-			<!-- Skills -->
-			<div  class="flex justify-center items-center py-[10vh] left-16 right-0 ">
-				<div class="relative w-[80%] lg:ml-16 min-h-[90vh] border border-primary bg-studio-200 shadow-glow shadow-accent m-2 dark:bg-purple-900 rounded-xl">
-					<div ref="skills" id="skills" class="absolute -top-10 h-full"></div>
-					<div class="flex w-full h-full flex-col">
-						<h1 class="text-4xl p-4  pt-16 text-purple-700 dark:text-primary">
-							Skills
-						</h1>
-
-						<DividerLine></DividerLine>
-						<div class="p-4"></div>
-						<h2 class="text-4xl p-4">
-							Technology
-						</h2>
-						<DashboardSkillsGrid :items="skillsTechnology"></DashboardSkillsGrid>
-						
-						<div class="p-4"></div>
-						<h2 class="text-4xl p-4">
-							General
-						</h2>
-						
-						<DashboardSkillsGrid :items="skillsGeneral"></DashboardSkillsGrid>
-					</div>
-
-				</div>
-			</div>
-
-
-
-			<footer class="w-full p-10 bg-studio-300 dark:bg-studio-1000 opacity-70">
+			<footer class=" ">
 				<div class="flex justify-center items-center">
-					<a class="hover:text-primary underline cursor-pointer select-none" href="http://github.com/Sorrer"> GitHub </a> 
-					<p class="px-2"> | </p>
-					<a class="hover:text-primary underline cursor-pointer select-none" href="http://linkedin.com/in/sorrer"> Linkedin </a> 
-					<p class="px-2"> | </p>
-					<a class="hover:text-primary underline cursor-pointer select-none" href="http://sorrer.itch.io/"> itch.io </a> 
-
-				</div>
-				<p>
-
-					<a class="hover:text-primary underline cursor-pointer select-none" href="mailto:alexander.xie3@gmail.com">alexander.xie3@gmail.com</a>
-				</p>
-				<div>
-					© {{ currentYear }} Alexander Xie
 				</div>
 			</footer>
 			
