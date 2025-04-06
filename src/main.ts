@@ -5,6 +5,8 @@ import './index.scss'
 import { createApp } from 'vue'
 import router from './router'
 import { createHead } from '@unhead/vue'
+import { createGtag } from "vue-gtag";
+
 // SSR requires a fresh app instance per request, therefore we export a function
 // that creates a fresh app instance. If using Vuex, we'd also be creating a
 // fresh store here.
@@ -25,5 +27,8 @@ app.use(router)
 app.use(glsl);
 const head = createHead()
 app.use(head)
+app.use(createGtag({
+      tagId: "G-2WZ4CQV386"
+}));
 
 app.mount('#app');

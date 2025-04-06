@@ -16,7 +16,7 @@ import IconCodeDownload from './assets/icons/IconCodeDownload.vue'
 import IconRightArrow from './assets/icons/IconRightArrow.vue'
 import { useHead } from "@unhead/vue";
 import IconResume from "./assets/icons/IconResume.vue";
-
+import { event } from 'vue-gtag'
 
 
 const skillsTechnology = ref(['Typescript', 'NodeJS', 'C#', 'C++', 'C', 'Kafka', 'PostgreSQL', 'REST', 'Websockets', 'Web Dev', 'Vue3', 'Game Dev', 'Unity', 'Java', 'Github Actions', 'Gitlab CI/CD', 'Kubernetes', 'Docker', 'Services', 'Linux']);
@@ -87,42 +87,43 @@ const selectedHref = ref<string>("");
 
 function updateHrefs()
 {
+	return;
 
-    let closestDistance = 9999999999999;
-    let index = '';
-
-
-    for(let i in href)
-    {
-        const element = href[i].element.value;
-
-        if(element)
-        {
-			console.log(i + " " + element.getBoundingClientRect().height)
-			const eleTop = element.getBoundingClientRect().top - (element.getBoundingClientRect().height/3)
-            if(eleTop < 0)
-            {
-                const distance = Math.abs(eleTop);
-
-                if(distance < closestDistance )
-                {
-                    index = i;
-                    closestDistance = distance;
-                }
-            }
-        }
-        else
-        {
-            console.error("Could not find href " + href );
-            continue;
-        }
-    }
+    // let closestDistance = 9999999999999;
+    // let index = '';
 
 
-	selectedHref.value = '#'+index;
-	if(window.location.hash != '#'+index) {
-		window.history.pushState(index, '', '#'+index);
-	}
+    // for(let i in href)
+    // {
+    //     const element = href[i].element.value;
+
+    //     if(element)
+    //     {
+	// 		console.log(i + " " + element.getBoundingClientRect().height)
+	// 		const eleTop = element.getBoundingClientRect().top - (element.getBoundingClientRect().height/3)
+    //         if(eleTop < 0)
+    //         {
+    //             const distance = Math.abs(eleTop);
+
+    //             if(distance < closestDistance )
+    //             {
+    //                 index = i;
+    //                 closestDistance = distance;
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         console.error("Could not find href " + href );
+    //         continue;
+    //     }
+    // }
+
+
+	// selectedHref.value = '#'+index;
+	// if(window.location.hash != '#'+index) {
+	// 	window.history.pushState(index, '', '#'+index);
+	// }
 }
 
 onMounted(() =>{
@@ -135,7 +136,7 @@ onMounted(() =>{
 <template>
   
 <div class="h-full relative overflow-hidden " :class="themeStore.theme === 'dark' ? 'dark' : '' "  :data-theme=" themeStore.theme === 'dark' ? 'dark' : ''"> 
-
+	
 	<div class="fixed bg-studio-50 dark:bg-studio-1050 w-full h-full -z-50	"></div> 
 	<div class="fixed bg-studio-50 dark:bg-studio-1050 w-full h-full visible sm:hidden -z-30"></div> 
 	<div class="h-full -z-50 absolute w-full opacity-10 dark:opacity-30 " ref="background">
@@ -154,12 +155,12 @@ onMounted(() =>{
 		<p>-- {{ getX() }} --</p> <!-- TODO: Add actual data here -->
 	</div>
 
-	
-	<div class="main h-full min-h-screen bg-gradient-to-br " >
+
+	<div class="main h-full min-h-screen " >
 		<div class="text-center font-bold dark:font-normal text-purple-900 dark:text-sand-100 font-lekton  ">
 			<!-- <NavBar class="md:hidden"></NavBar> For top bar fdding-->
 			<!-- <NavBar class="md:hidden" :sticky="true"></NavBar>  -->
-			<div  ref="overview"  id="overview" class="flex flex-wrap lg:flex-nowrap lg:min-h-[70vh]">
+			<div  ref="overview"  id="overview" class="flex flex-wrap lg:flex-nowrap lg:min-h-screen items-center">
 				<div class="lg:w-[30vh]"></div>
 				<div class="flex-auto items-center inline-block w-full m-10 lg:max-w-96 min-h-80 lg:mx-28  p-4 bg-studio-300 dark:bg-purple-900 card border border-primary shadow-glow-lg rounded-b-lg shadow-accent bg-gradient-to-tr from-purple-200 to-purple-100 dark:from-purple-900 dark:to-purple-800" >
 					
@@ -187,10 +188,10 @@ onMounted(() =>{
 						</div>
 					</div>
 
-					<div class="p-6"></div>
-					<div class="w-full align-bottom flex-1 flex-wrap justify-center"> 
+					<div class="p-4"></div>
+					<div class="w-full align-bottom flex-1 flex-wrap justify-center pb-4"> 
 						<a class="self-end text-lg pb-4 flex items-center justify-center">
-							<a target="_blank" href="/assets/resume/Alexander Xie Resume.pdf" class="flex  items-center justify-center cursor-pointer hover:text-bright-500 hover:fill-bright-500 dark:hover:stroke-bright-500  fill-primary pr-2 hover:border hover:border-bright-500 border border-primary bg-gradient-to-bl from-studio-50 to-studio-200 dark:from-studio-800 dark:to-studio-950 hover:from-studio-1000 hover:to-studio-1050 dark:hover:from-studio-1000 dark:hover:to-studio-1050 select-none shadow-glow hover:shadow-glow-lg shadow-primary hover:shadow-bright-500 ">
+							<a target="_blank" href="/assets/resume/Alexander Xie Resume.pdf" @click="event('opened_resume', {})" class="flex  items-center justify-center cursor-pointer hover:text-bright-500 hover:fill-bright-500 dark:hover:stroke-bright-500  fill-primary pr-2 hover:border hover:border-bright-500 border border-primary bg-gradient-to-bl from-studio-50 to-studio-200 dark:from-studio-800 dark:to-studio-950 hover:from-studio-1000 hover:to-studio-1050 dark:hover:from-studio-1000 dark:hover:to-studio-1050 select-none shadow-glow hover:shadow-glow-lg shadow-primary hover:shadow-bright-500 ">
 								<IconResume class="w-8 m-2 mr-" />
 								<p class=" pr-2 text-xl">
 									My Resume 
@@ -227,7 +228,7 @@ onMounted(() =>{
 			
 		</div>
 
-		
+		<div class="absolute h-screen w-screen bg-[#0f0f0f]"></div>
 	</div>
 	
 </div>
@@ -235,7 +236,6 @@ onMounted(() =>{
 
 
 <style lang="scss">
-
 
 .rotate {  
     transform:  translateX(-50%) translateY(-50%) rotate(-90deg);
@@ -272,5 +272,9 @@ onMounted(() =>{
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 	background: #BB77FF;
+}
+
+body { 
+	background: #180f26;
 }
 </style>./helpers/shaders/hexagons

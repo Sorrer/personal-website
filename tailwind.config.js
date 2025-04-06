@@ -11,8 +11,8 @@ export default {
 				'xlg': "2350px",
 				'lg2': '2000px',
 				'lg1.5': '1600px',
-				'lg': '1200px',
-				'md': '900px',
+				'lg': '1500px',
+				'md': '1300px',
 				'md2': '1200px'
 			},
 			boxShadow: {
