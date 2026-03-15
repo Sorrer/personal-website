@@ -170,9 +170,9 @@ function calculatePositions()
 <template>
     <div class="w-full h-full relative flex overflow-hidden select-none" ref="container">
         <div class="absolute w-full h-full overflow-hidden inline-table">
-            <div class="flex items-center justify-center"> 
-                <p class=" text-primary p-8">
-                    {{ title }}
+            <div class="flex items-center justify-center">
+                <p class="text-primary p-8 font-lekton text-sm tracking-wider">
+                    &gt; SCANNING: {{ title }}
                 </p>
             </div>
             <!-- <div class="absolute bottom-0 h-[12pxx] w-full bg-[rgba(255,255,255,0.04)] rounded-b-lg hover:bg-primary hover:cursor-pointer select-none">
@@ -182,7 +182,7 @@ function calculatePositions()
                 <div 
                     class="circle absolute w-[140px] h-[140px]" 
                     :class="i.hidden ? 'hidden' : '' +
-                            (j === selectedIndex ? 'bg-studio-50 dark:bg-studio-900 shadow-glow shadow-primary' : ' scaledDown  bg-studio-300 dark:bg-studio-900')
+                            (j === selectedIndex ? 'bg-studio-50 dark:bg-studio-900 shadow-neon border border-primary/40' : ' scaledDown  bg-studio-300 dark:bg-studio-900')
                             " 
                     :style="{left: items[j].position.x + 'px', top: items[j].position.y +'px'}">
                     <div class="flex w-full h-full items-center justify-center text-xl">

@@ -35,7 +35,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float totalDist = calcHexDistance(hexInfo.xy) + borderThickness;
     float rand = random(hexInfo.zw) * 0.2;
     
-    float angle = atan(hexInfo.y, hexInfo.x) + rand * 3.  + iTime;
+    float angle = atan(hexInfo.y, hexInfo.x) + rand * 3.  + iTime * 0.3;
     vec3 isoline = S(isolineOffset, totalDist) * baseCol * step(3. + rand * .5, mod(angle, 6.28));
        
     float sinOffset = sin( rand * 8.);
@@ -83,7 +83,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float totalDist = calcHexDistance(hexInfo.xy) + borderThickness;
     float rand = random(hexInfo.zw);
     
-    float angle = atan(hexInfo.y, hexInfo.x) + rand * 3.  + iTime;
+    float angle = atan(hexInfo.y, hexInfo.x) + rand * 3.  + iTime * 0.3;
     vec3 isoline = S(isolineOffset, totalDist) * baseCol * step(3. + rand * .7, mod(angle, 6.));
        
     float sinOffset = sin( rand * 8.);
