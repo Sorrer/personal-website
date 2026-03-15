@@ -77,7 +77,7 @@ function next() {
               class="text-xs tracking-wider mt-3 transition-all duration-300 whitespace-nowrap select-none"
               :class="i === activeIndex ? 'text-primary font-bold' : 'text-studio-600 dark:text-studio-400 opacity-65 group-hover:opacity-90'"
             >
-              <GlitchText v-if="entry.id === 'next'" :text="entry.title" />
+              <GlitchText v-if="entry.id === 'next'" :text="entry.title" :interval="1500" />
               <template v-else>{{ entry.title }}</template>
             </span>
           </div>
@@ -98,16 +98,29 @@ function next() {
               <div :key="activeIndex" class="flex flex-col gap-1.5">
                 <div class="flex items-baseline gap-3 flex-wrap">
                   <h1 class="text-lg font-bold text-primary leading-tight">
-                    <GlitchText v-if="activeEntry.id === 'next'" :text="activeEntry.title" />
+                    <GlitchText v-if="activeEntry.id === 'next'" :text="activeEntry.title" :interval="1500" />
                     <template v-else>{{ activeEntry.title }}</template>
                   </h1>
                   <span class="text-[11px] tracking-[0.15em] text-bright-700 dark:text-bright-500/80">
-                    [{{ activeEntry.timestamp }}] → [{{ activeEntry.end.toUpperCase() }}]
+                    <GlitchText v-if="activeEntry.id === 'next'" :text="'[' + activeEntry.timestamp + '] → [' + activeEntry.end.toUpperCase() + ']'" :interval="1500" />
+                    <template v-else>[{{ activeEntry.timestamp }}] → [{{ activeEntry.end.toUpperCase() }}]</template>
                   </span>
                 </div>
-                <h2 class="text-sm font-bold text-studio-700 dark:text-studio-400">{{ activeEntry.role }}</h2>
+                <!-- Role segments with time ranges -->
+                <div v-if="activeEntry.roles" class="flex flex-col gap-0.5">
+                  <div v-for="(r, ri) in activeEntry.roles" :key="ri" class="flex items-baseline gap-2">
+                    <h2 class="text-sm font-bold text-studio-700 dark:text-studio-400">{{ r.title }}</h2>
+                    <span class="text-[10px] tracking-widest text-studio-500 dark:text-studio-500">{{ r.start }} → {{ r.end }}</span>
+                  </div>
+                </div>
+                <!-- Single role fallback -->
+                <h2 v-else class="text-sm font-bold text-studio-700 dark:text-studio-400">
+                  <GlitchText v-if="activeEntry.id === 'next'" :text="activeEntry.role" :interval="1500" />
+                  <template v-else>{{ activeEntry.role }}</template>
+                </h2>
                 <p class="mt-1 text-sm leading-relaxed text-studio-800 dark:text-studio-300">
-                  {{ activeEntry.summary }}
+                  <GlitchText v-if="activeEntry.id === 'next'" :text="activeEntry.summary" :interval="1500" />
+                  <template v-else>{{ activeEntry.summary }}</template>
                 </p>
               </div>
             </Transition>
@@ -160,10 +173,12 @@ function next() {
                 : 'border-accent/50 bg-studio-100 dark:bg-studio-950'"
             />
             <span class="text-[11px] tracking-widest text-studio-600 dark:text-studio-400">
-              {{ entry.timestamp }}
+              <GlitchText v-if="entry.id === 'next'" :text="entry.timestamp" :interval="1500" />
+              <template v-else>{{ entry.timestamp }}</template>
             </span>
             <span class="text-[11px] tracking-[0.15em] text-bright-700 dark:text-bright-500/80">
-              → [{{ entry.end.toUpperCase() }}]
+              <GlitchText v-if="entry.id === 'next'" :text="'→ [' + entry.end.toUpperCase() + ']'" :interval="1500" />
+              <template v-else>→ [{{ entry.end.toUpperCase() }}]</template>
             </span>
           </div>
 
@@ -172,17 +187,29 @@ function next() {
             class="text-base font-bold leading-tight transition-colors duration-300"
             :class="i === activeIndex ? 'text-primary' : 'text-studio-700 dark:text-studio-400'"
           >
-            <GlitchText v-if="entry.id === 'next'" :text="entry.title" />
+            <GlitchText v-if="entry.id === 'next'" :text="entry.title" :interval="1500" />
             <template v-else>{{ entry.title }}</template>
           </h1>
-          <h2 class="text-sm font-bold text-studio-700 dark:text-studio-400 mt-0.5">{{ entry.role }}</h2>
+          <!-- Role segments with time ranges -->
+          <div v-if="entry.roles" class="flex flex-col gap-0.5 mt-0.5">
+            <div v-for="(r, ri) in entry.roles" :key="ri" class="flex items-baseline gap-2">
+              <h2 class="text-sm font-bold text-studio-700 dark:text-studio-400">{{ r.title }}</h2>
+              <span class="text-[10px] tracking-widest text-studio-500 dark:text-studio-500">{{ r.start }} → {{ r.end }}</span>
+            </div>
+          </div>
+          <!-- Single role fallback -->
+          <h2 v-else class="text-sm font-bold text-studio-700 dark:text-studio-400 mt-0.5">
+            <GlitchText v-if="entry.id === 'next'" :text="entry.role" :interval="1500" />
+            <template v-else>{{ entry.role }}</template>
+          </h2>
 
           <!-- Description (only on active) -->
           <p
             v-if="i === activeIndex"
             class="mt-2 text-sm leading-relaxed text-studio-800 dark:text-studio-300"
           >
-            {{ entry.summary }}
+            <GlitchText v-if="entry.id === 'next'" :text="entry.summary" :interval="1500" />
+            <template v-else>{{ entry.summary }}</template>
           </p>
         </div>
       </div>

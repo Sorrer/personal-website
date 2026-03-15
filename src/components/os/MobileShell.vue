@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import MobileHeader from './MobileHeader.vue'
 import MobileNavBar from './MobileNavBar.vue'
@@ -84,10 +84,9 @@ function onScrollThrottled() {
   }, 50)
 }
 
-onMounted(() => {
-  nextTick(() => {
-    scrollContainer.value?.addEventListener('scroll', onScrollThrottled, { passive: true })
-  })
+watch(scrollContainer, (newEl, oldEl) => {
+  oldEl?.removeEventListener('scroll', onScrollThrottled)
+  newEl?.addEventListener('scroll', onScrollThrottled, { passive: true })
 })
 
 onUnmounted(() => {

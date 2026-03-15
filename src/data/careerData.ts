@@ -1,7 +1,14 @@
+export interface RoleSegment {
+  title: string
+  start: string
+  end: string
+}
+
 export interface CareerEntry {
   id: string
   title: string
   role: string
+  roles?: RoleSegment[]
   timestamp: string
   end: string
   summary: string
@@ -37,10 +44,14 @@ export const careerEntries: CareerEntry[] = [
   {
     id: 'lightriver',
     title: 'LightRiver',
-    role: 'Software Engineer → Software Engineering Manager',
+    role: 'Software Engineering Manager',
+    roles: [
+      { title: 'Software Engineer', start: '2023.06', end: '2024.06' },
+      { title: 'Software Engineering Manager', start: '2024.06', end: '2026.03' },
+    ],
     timestamp: '2023.06',
     end: '2026.03',
-    summary: 'Started as a Software Engineer building cloud-native network automation solutions, then promoted to Software Engineering Manager. Led engineering teams, drove architecture decisions, and shaped technical strategy across multiple product lines.',
+    summary: 'Built cloud-native network automation solutions. Led engineering teams, drove architecture decisions, and shaped technical strategy across multiple product lines.',
   },
   {
     id: 'next',

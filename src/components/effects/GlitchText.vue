@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   text: string
-}>()
+  interval?: number
+}>(), {
+  interval: 5000,
+})
 
 const isGlitching = ref(false)
 let glitchInterval: ReturnType<typeof setInterval> | null = null
@@ -16,9 +19,8 @@ function triggerGlitch() {
 }
 
 onMounted(() => {
-  // Random interval between 5-8 seconds
   function scheduleGlitch() {
-    const delay = 5000 + Math.random() * 3000
+    const delay = props.interval + Math.random() * (props.interval * 0.6)
     glitchInterval = setTimeout(() => {
       triggerGlitch()
       scheduleGlitch()

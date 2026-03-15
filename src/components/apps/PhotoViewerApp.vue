@@ -127,6 +127,65 @@ function initLoadStates() {
 initLoadStates()
 
 const lightbox = ref<number | null>(null)
+const lightboxFullLoaded = ref(false)
+const lightboxFullUrl = ref('')
+const lightboxProgress = ref(0)
+let lightboxAbort: AbortController | null = null
+
+async function loadFullRes(index: number) {
+  lightboxAbort?.abort()
+  const controller = new AbortController()
+  lightboxAbort = controller
+  lightboxFullLoaded.value = false
+  lightboxFullUrl.value = ''
+  lightboxProgress.value = 0
+
+  const photo = allPhotos.value[index]
+  try {
+    const response = await fetch(photo.fullUrl, { signal: controller.signal })
+    const contentLength = response.headers.get('Content-Length')
+
+    if (!response.body) {
+      const blob = await response.blob()
+      if (controller.signal.aborted) return
+      lightboxFullUrl.value = URL.createObjectURL(blob)
+      lightboxProgress.value = 100
+      lightboxFullLoaded.value = true
+      return
+    }
+
+    const total = contentLength ? parseInt(contentLength, 10) : 0
+    let received = 0
+    const reader = response.body.getReader()
+    const chunks: Uint8Array[] = []
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      if (controller.signal.aborted) return
+      chunks.push(value)
+      received += value.length
+      if (total > 0) {
+        lightboxProgress.value = Math.min((received / total) * 100, 99.9)
+      } else {
+        // No Content-Length: asymptotic progress (approaches but never reaches 100)
+        lightboxProgress.value = Math.min((1 - Math.exp(-received / 2_000_000)) * 95, 99.9)
+      }
+    }
+
+    if (controller.signal.aborted) return
+    const blob = new Blob(chunks)
+    lightboxFullUrl.value = URL.createObjectURL(blob)
+    lightboxProgress.value = 100
+    lightboxFullLoaded.value = true
+  } catch {
+    if (controller.signal.aborted) return
+    // Fallback — use the URL directly
+    lightboxFullUrl.value = photo.fullUrl
+    lightboxProgress.value = 100
+    lightboxFullLoaded.value = true
+  }
+}
 
 async function loadImage(index: number) {
   const photo = allPhotos.value[index]
@@ -173,11 +232,21 @@ async function loadImage(index: number) {
 }
 
 function openLightbox(index: number) {
+  lightboxFullLoaded.value = false
   lightbox.value = index
+  loadFullRes(index)
 }
 
 function closeLightbox() {
+  lightboxAbort?.abort()
+  lightboxAbort = null
+  if (lightboxFullUrl.value.startsWith('blob:')) {
+    URL.revokeObjectURL(lightboxFullUrl.value)
+  }
   lightbox.value = null
+  lightboxFullLoaded.value = false
+  lightboxFullUrl.value = ''
+  lightboxProgress.value = 0
 }
 
 function onKeyDown(e: KeyboardEvent) {
@@ -298,12 +367,45 @@ onUnmounted(() => {
               <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
             </svg>
           </button>
-          <img
-            :src="allPhotos[lightbox].fullUrl"
-            :alt="allPhotos[lightbox].caption"
-            class="lightbox-image relative max-w-[90vw] max-h-[85vh] object-contain rounded shadow-neon"
-            @click.stop
-          />
+          <div class="lightbox-image relative rounded shadow-neon overflow-hidden" @click.stop>
+            <!-- Blurred thumbnail placeholder — in flow, sizes the container -->
+            <img
+              v-if="loadState[lightbox]?.displayUrl"
+              :src="loadState[lightbox].displayUrl"
+              :alt="allPhotos[lightbox].caption"
+              class="block max-w-[90vw] max-h-[85vh]"
+              :class="lightboxFullLoaded ? '' : 'scale-[1.02]'"
+              :style="!lightboxFullLoaded ? { filter: `blur(${64 - (lightboxProgress / 100) * 56}px) saturate(${0.4 + (lightboxProgress / 100) * 0.6})` } : undefined"
+            />
+            <!-- Full-res image absolute on top -->
+            <img
+              v-if="lightboxFullUrl"
+              :src="lightboxFullUrl"
+              :alt="allPhotos[lightbox].caption"
+              class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+              :class="lightboxFullLoaded ? 'opacity-100' : 'opacity-0'"
+            />
+            <!-- Loading progress bar -->
+            <Transition name="loading-fade">
+              <div v-if="!lightboxFullLoaded" class="absolute bottom-0 left-0 right-0 px-6 pb-4 pt-8 bg-gradient-to-t from-black/60 to-transparent">
+                <div class="flex items-center justify-between mb-1.5 font-lekton">
+                  <span class="text-[10px] tracking-widest text-studio-300">LOADING FULL RES...</span>
+                  <span class="text-[10px] tracking-widest text-studio-400 tabular-nums">{{ Math.round(lightboxProgress) }}%</span>
+                </div>
+                <div class="h-1 w-full rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    class="h-full rounded-full bg-primary transition-none"
+                    :style="{ width: lightboxProgress + '%' }"
+                  >
+                    <div
+                      v-if="lightboxProgress > 0 && lightboxProgress < 100"
+                      class="h-full w-1.5 float-right rounded-full bg-purple-300 shadow-[0_0_6px_2px_rgba(187,119,255,0.3)]"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
           <div
             class="lightbox-caption absolute bottom-6 left-1/2 -translate-x-1/2 px-8 py-2 text-sm font-lekton tracking-[0.15em] text-studio-200 text-center whitespace-nowrap"
           >
