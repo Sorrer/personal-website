@@ -1,29 +1,25 @@
 import { defineStore } from "pinia"
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
 export type THEME_VALUES = "light" | "dark";
 
 export const useThemeStore = defineStore('themeStore', () => {
-    
+
     const theme = ref<THEME_VALUES>("dark");
+
+    function applyTheme() {
+        document.body.setAttribute('data-theme', theme.value);
+        document.documentElement.classList.toggle('dark', theme.value === 'dark');
+    }
 
     function toggleTheme()
     {
-        console.log(theme.value);
-
-        if(theme.value === "dark")
-        {
-            theme.value = "light"
-        }
-        else
-        {
-            theme.value = "dark"
-        }
-
-        window.document.getElementsByTagName('body')[0].setAttribute('data-theme', theme.value);
-
-
+        theme.value = theme.value === "dark" ? "light" : "dark";
+        applyTheme();
     }
+
+    // Apply initial theme
+    applyTheme();
 
     return { toggleTheme, theme }
   })
