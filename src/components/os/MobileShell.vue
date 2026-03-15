@@ -7,22 +7,24 @@ import ProfileApp from '../apps/ProfileApp.vue'
 import SkillMatrixApp from '../apps/SkillMatrixApp.vue'
 import CareerLogApp from '../apps/CareerLogApp.vue'
 import PhotoViewerApp from '../apps/PhotoViewerApp.vue'
+import ProjectsApp from '../apps/ProjectsApp.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const tabs = ['profile', 'skills', 'career'] as const
+const swipeTabs = ['profile', 'skills', 'career'] as const
 const activeTab = ref<string>('profile')
 const scrollContainer = ref<HTMLElement | null>(null)
-const menuOpen = ref(false)
 let isScrolling = false
 
 const extraApps = [
+  { id: 'projects', label: 'PROJECT ARCHIVE', path: '/projects' },
   { id: 'photos', label: 'PHOTO VIEWER', path: '/photos' },
 ] as const
 
 const activeApp = computed(() => {
   if (route.path === '/photos') return 'photos'
+  if (route.path === '/projects') return 'projects'
   return null
 })
 
@@ -32,26 +34,25 @@ const activeAppLabel = computed(() => {
 })
 
 function openApp(path: string) {
-  menuOpen.value = false
   router.push(path)
 }
 
 function goBack() {
-  activeTab.value = 'profile'
+  activeTab.value = 'more'
   router.push('/')
 }
 
-function toggleMenu() {
-  menuOpen.value = !menuOpen.value
-}
-
-function closeMenu() {
-  menuOpen.value = false
-}
-
 function onTabChange(tabId: string) {
-  const index = tabs.indexOf(tabId as typeof tabs[number])
-  if (index === -1 || !scrollContainer.value) return
+  if (tabId === 'more') {
+    activeTab.value = 'more'
+    return
+  }
+
+  const index = swipeTabs.indexOf(tabId as typeof swipeTabs[number])
+  if (index === -1 || !scrollContainer.value) {
+    activeTab.value = tabId
+    return
+  }
 
   isScrolling = true
   activeTab.value = tabId
@@ -60,7 +61,6 @@ function onTabChange(tabId: string) {
     behavior: 'smooth',
   })
 
-  // Reset flag after scroll animation
   setTimeout(() => { isScrolling = false }, 400)
 }
 
@@ -69,8 +69,8 @@ function onScroll() {
 
   const { scrollLeft, clientWidth } = scrollContainer.value
   const index = Math.round(scrollLeft / clientWidth)
-  if (index >= 0 && index < tabs.length) {
-    activeTab.value = tabs[index]
+  if (index >= 0 && index < swipeTabs.length) {
+    activeTab.value = swipeTabs[index]
   }
 }
 
@@ -102,47 +102,47 @@ onUnmounted(() => {
       :active-tab="activeTab"
       :show-back="activeApp !== null"
       :app-label="activeAppLabel"
-      @open-menu="toggleMenu"
       @back="goBack"
     />
 
-    <!-- Dropdown menu overlay -->
-    <Transition name="menu-fade">
-      <div
-        v-if="menuOpen && activeApp === null"
-        class="fixed inset-0 z-[999] mt-11"
-        @click="closeMenu"
-      >
-        <div class="mobile-menu-dropdown mx-3 mt-1 rounded overflow-hidden" @click.stop>
+    <!-- App full-screen view (no bottom nav) -->
+    <template v-if="activeApp !== null">
+      <div class="flex-1 overflow-y-auto mt-11">
+        <PhotoViewerApp v-if="activeApp === 'photos'" />
+        <ProjectsApp v-if="activeApp === 'projects'" />
+      </div>
+    </template>
+
+    <!-- More tab content -->
+    <template v-else-if="activeTab === 'more'">
+      <div class="flex-1 overflow-y-auto mt-11 mb-14 p-4">
+        <div class="font-lekton text-[10px] tracking-[0.2em] text-studio-500 dark:text-studio-400 mb-4">
+          <span class="text-accent dark:text-primary">[</span> APPLICATIONS <span class="text-accent dark:text-primary">]</span>
+        </div>
+        <div class="flex flex-col gap-2">
           <button
             v-for="app in extraApps"
             :key="app.id"
             @click="openApp(app.path)"
-            class="w-full flex items-center gap-3 px-4 py-3 font-lekton text-[11px] tracking-[0.15em] text-studio-300 dark:text-studio-400 hover:bg-studio-900/60 dark:hover:bg-studio-950/80 transition-colors cursor-pointer"
+            class="more-app-button flex items-center gap-3 px-4 py-3.5 rounded font-lekton text-xs tracking-[0.12em] text-studio-300 dark:text-studio-400 transition-colors cursor-pointer text-left"
           >
-            <span class="text-accent dark:text-primary">&gt;</span>
+            <span class="text-accent dark:text-primary text-sm">&gt;</span>
             {{ app.label }}
           </button>
         </div>
       </div>
-    </Transition>
 
-    <!-- App full-screen view -->
-    <template v-if="activeApp !== null">
-      <div class="flex-1 overflow-y-auto mt-11">
-        <PhotoViewerApp v-if="activeApp === 'photos'" />
-      </div>
+      <MobileNavBar :active-tab="activeTab" @change="onTabChange" />
     </template>
 
-    <!-- Normal tab layout -->
+    <!-- Normal swipeable tab layout -->
     <template v-else>
-      <!-- Swipeable content area -->
       <div
         ref="scrollContainer"
         class="mobile-snap-container flex-1 flex overflow-x-auto overflow-y-hidden mt-11 mb-14"
       >
         <div
-          v-for="tab in tabs"
+          v-for="tab in swipeTabs"
           :key="tab"
           class="mobile-snap-page w-screen shrink-0 overflow-y-auto"
         >
@@ -154,7 +154,6 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- Bottom Nav -->
       <MobileNavBar :active-tab="activeTab" @change="onTabChange" />
     </template>
   </div>
@@ -177,31 +176,24 @@ onUnmounted(() => {
   scroll-snap-stop: always;
 }
 
-.mobile-menu-dropdown {
-  background: linear-gradient(180deg, rgba(15, 9, 24, 0.97) 0%, rgba(8, 5, 13, 0.97) 100%);
-  border: 1px solid rgba(187, 119, 255, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(187, 119, 255, 0.08);
+.more-app-button {
+  background: rgba(15, 9, 24, 0.6);
+  border: 1px solid rgba(187, 119, 255, 0.12);
 }
 
-body[data-theme="light"] .mobile-menu-dropdown {
-  background: linear-gradient(180deg, rgba(240, 237, 250, 0.98) 0%, rgba(228, 221, 247, 0.98) 100%);
-  border: 1px solid rgba(102, 51, 153, 0.25);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.more-app-button:hover {
+  background: rgba(15, 9, 24, 0.8);
+  border-color: rgba(187, 119, 255, 0.25);
 }
 
-body[data-theme="light"] .mobile-menu-dropdown button {
+body[data-theme="light"] .more-app-button {
+  background: rgba(228, 221, 247, 0.5);
+  border: 1px solid rgba(102, 51, 153, 0.15);
   color: #56337f;
 }
 
-/* Menu transition */
-.menu-fade-enter-active {
-  transition: opacity 0.15s ease;
-}
-.menu-fade-leave-active {
-  transition: opacity 0.1s ease;
-}
-.menu-fade-enter-from,
-.menu-fade-leave-to {
-  opacity: 0;
+body[data-theme="light"] .more-app-button:hover {
+  background: rgba(228, 221, 247, 0.8);
+  border-color: rgba(102, 51, 153, 0.3);
 }
 </style>

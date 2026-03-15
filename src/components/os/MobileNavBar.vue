@@ -15,6 +15,7 @@ const tabs = [
   { id: 'profile', label: 'PROFILE', icon: IconAvatar },
   { id: 'skills', label: 'SKILLS', icon: IconHardwareChip },
   { id: 'career', label: 'CAREER', icon: IconBarChart },
+  { id: 'more', label: 'MORE', icon: null },
 ] as const
 
 function activeIndex() {
@@ -41,13 +42,26 @@ function activeIndex() {
         class="flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors duration-200 cursor-pointer"
         :class="activeTab === tab.id ? 'text-accent dark:text-primary' : 'text-studio-500'"
       >
+        <!-- Named icon components -->
         <component
+          v-if="tab.icon"
           :is="tab.icon"
           class="w-5 h-5 transition-colors duration-200"
           :class="activeTab === tab.id
             ? 'stroke-accent dark:stroke-primary fill-none'
             : 'stroke-studio-500 fill-none'"
         />
+        <!-- Inline grid icon for MORE -->
+        <svg
+          v-else
+          width="20" height="20" viewBox="0 0 20 20" fill="none"
+          class="transition-colors duration-200"
+        >
+          <circle cx="6" cy="6" r="2" :class="activeTab === tab.id ? 'fill-accent dark:fill-primary' : 'fill-studio-500'" />
+          <circle cx="14" cy="6" r="2" :class="activeTab === tab.id ? 'fill-accent dark:fill-primary' : 'fill-studio-500'" />
+          <circle cx="6" cy="14" r="2" :class="activeTab === tab.id ? 'fill-accent dark:fill-primary' : 'fill-studio-500'" />
+          <circle cx="14" cy="14" r="2" :class="activeTab === tab.id ? 'fill-accent dark:fill-primary' : 'fill-studio-500'" />
+        </svg>
         <span class="font-lekton text-[10px] tracking-wider">{{ tab.label }}</span>
       </button>
     </div>
@@ -82,5 +96,13 @@ body[data-theme="light"] .mobile-navbar .stroke-studio-500 {
 
 body[data-theme="light"] .mobile-navbar .stroke-primary {
   stroke: #663399;
+}
+
+body[data-theme="light"] .mobile-navbar .fill-studio-500 {
+  fill: #9c79d9;
+}
+
+body[data-theme="light"] .mobile-navbar .fill-accent {
+  fill: #663399;
 }
 </style>

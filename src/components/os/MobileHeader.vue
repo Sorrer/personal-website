@@ -11,7 +11,6 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  'open-menu': []
   back: []
 }>()
 
@@ -40,6 +39,7 @@ const sectionLabels: Record<string, string> = {
   profile: 'PROFILE',
   skills: 'SKILL_MATRIX',
   career: 'CAREER_LOG',
+  more: 'MORE',
 }
 </script>
 
@@ -56,22 +56,8 @@ const sectionLabels: Record<string, string> = {
         &larr; BACK
       </button>
 
-      <!-- Menu dots button (normal mode) -->
-      <button
-        v-else
-        @click="emit('open-menu')"
-        class="w-7 h-7 flex items-center justify-center rounded hover:bg-studio-800/60 transition-colors cursor-pointer"
-        title="More apps"
-      >
-        <svg width="4" height="16" viewBox="0 0 4 16" fill="none" class="text-studio-400">
-          <circle cx="2" cy="2" r="1.5" fill="currentColor" />
-          <circle cx="2" cy="8" r="1.5" fill="currentColor" />
-          <circle cx="2" cy="14" r="1.5" fill="currentColor" />
-        </svg>
-      </button>
-
-      <!-- Branding (normal mode only) -->
-      <div v-if="!showBack" class="font-lekton text-xs text-accent dark:text-primary tracking-wider transition-colors duration-500">
+      <!-- Branding (normal mode) -->
+      <div v-else class="font-lekton text-xs text-accent dark:text-primary tracking-wider transition-colors duration-500">
         <GlitchText text="HEXCORE //" />
       </div>
     </div>

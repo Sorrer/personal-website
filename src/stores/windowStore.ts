@@ -89,8 +89,8 @@ export const useWindowStore = defineStore('windowStore', () => {
       loadingProgress: 0,
       zIndex: nextZIndex++,
       position: { x: 0, y: 0 },
-      size: { width: 650, height: 520 },
-      defaultSize: { width: 650, height: 520 },
+      size: { width: 812, height: 650 },
+      defaultSize: { width: 812, height: 650 },
     },
     photos: {
       id: 'photos',
