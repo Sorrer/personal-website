@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useThemeStore } from '../../stores/themeStore'
-import IconLightBulb from '../../assets/icons/IconLightBulb.vue'
 import GlitchText from '../effects/GlitchText.vue'
 
 defineProps<{
@@ -13,8 +11,6 @@ defineProps<{
 const emit = defineEmits<{
   back: []
 }>()
-
-const themeStore = useThemeStore()
 
 const clock = ref('00:00')
 let clockInterval: ReturnType<typeof setInterval> | null = null
@@ -69,15 +65,6 @@ const sectionLabels: Record<string, string> = {
 
     <!-- Right: Controls -->
     <div class="flex items-center gap-2.5 shrink-0">
-      <!-- Theme Toggle -->
-      <button
-        @click="themeStore.toggleTheme()"
-        class="w-7 h-7 flex items-center justify-center rounded hover:bg-studio-800/60 transition-colors cursor-pointer"
-        :class="themeStore.theme === 'light' ? 'ring-1 ring-bright-500/50' : ''"
-      >
-        <IconLightBulb class="w-4 h-4 stroke-studio-400 hover:stroke-studio-200 transition-colors" :class="themeStore.theme === 'light' ? 'stroke-bright-400' : ''" />
-      </button>
-
       <!-- Connection Status -->
       <span class="w-1.5 h-1.5 rounded-full bg-bright-700 dark:bg-bright-400 animate-pulse"></span>
 
@@ -103,11 +90,4 @@ body[data-theme="light"] .mobile-header {
   border-bottom: 1px solid rgba(102, 51, 153, 0.2);
 }
 
-body[data-theme="light"] .mobile-header .stroke-studio-400 {
-  stroke: #7d4bb9;
-}
-
-body[data-theme="light"] .mobile-header .hover\:bg-studio-800\/60:hover {
-  background: rgba(140, 91, 204, 0.15);
-}
 </style>

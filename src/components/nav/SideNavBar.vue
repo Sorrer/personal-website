@@ -1,16 +1,11 @@
 <script lang="ts" setup>
-import IconLightBulb from '../../assets/icons/IconLightBulb.vue'
 import IconBarChart from '../../assets/icons/IconBarChart.vue'
 import IconOffice from '../../assets/icons/IconOffice.vue'
 import IconHardwareChip from '../../assets/icons/IconHardwareChip.vue'
-import {useThemeStore} from '../../stores/themeStore'
-
 
 const props = defineProps<{
     selectedHref?: string
 }>()
-
-const themeStore = useThemeStore();
 
 interface NavBarItem
 {
@@ -47,17 +42,6 @@ const navBarItems : NavBarItem[] = [
         <div class="flex h-full w-full items-center justify-center flex-col ">
 
         <div class="w-full h-full flex items-center justify-center flex-col bg-studio-1000 border border-l-0 border-accent bg-gradient-to-t from-studio-400 to-studio-300 dark:from-purple-900 dark:to-studio-1000 opacity-90 backdrop-blur-sm">
-            <!-- Toggle Switch -->
-
-            <div class="w-12 h-8 mb-4">
-                    <div @click="themeStore.toggleTheme()"
-                        class="cursor-pointer flex items-center justify-center w-full h-full rounded-full shadow-inner-button transition-all duration-300
-                        dark:hover:bg-studio-50 dark:bg-studio-800 hover:bg-studio-800 bg-studio-50 stroke-primary hover:stroke-primary"
-                        :class="themeStore.theme === 'light' ? 'ring-2 ring-bright-500 shadow-glow-sm shadow-bright-500' : ''"
-                        :title="themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
-                        <IconLightBulb class="w-[75%] h-[75%] transition-transform duration-300" :class="themeStore.theme === 'light' ? 'stroke-bright-500 scale-110' : ''"></IconLightBulb>
-                </div>
-            </div>
             <template v-for="i in navBarItems" :key="i.name">
 
                 <div class="w-12 h-12 mb-4 group relative">
@@ -82,12 +66,6 @@ const navBarItems : NavBarItem[] = [
     <!-- Mobile bottom nav -->
     <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-accent/40 bg-studio-200/80 dark:bg-studio-1000/80 backdrop-blur-md">
         <div class="flex items-center justify-around py-2 px-4">
-            <div @click="themeStore.toggleTheme()"
-                class="cursor-pointer flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300
-                dark:bg-studio-800 bg-studio-50 stroke-primary"
-                :class="themeStore.theme === 'light' ? 'ring-2 ring-bright-500 shadow-glow-sm shadow-bright-500' : 'shadow-glow-sm shadow-purple-600'">
-                <IconLightBulb class="w-[60%] h-[60%] transition-transform duration-300" :class="themeStore.theme === 'light' ? 'stroke-bright-500 scale-110' : ''"></IconLightBulb>
-            </div>
             <template v-for="i in navBarItems" :key="i.name">
                 <a :href="i.href" :title="i.name" class="flex items-center justify-center w-10 h-10 transition-all duration-200
                     border border-purple-600/60 hover:bg-primary dark:hover:bg-primary hover:stroke-accent hover:fill-accent dark:bg-studio-800

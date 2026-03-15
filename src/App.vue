@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useThemeStore } from './stores/themeStore'
-import { onMounted, ref, watch, computed, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, watch, computed, nextTick } from 'vue'
 import { HEXAGON_VERTEX, HEXAGON_VERTEX_DARK } from './helpers/shaders/hexagons'
 import { useResizeObserver } from '@vueuse/core'
 import { useHead } from '@unhead/vue'
@@ -18,6 +18,7 @@ import SkillMatrixApp from './components/apps/SkillMatrixApp.vue'
 import CareerLogApp from './components/apps/CareerLogApp.vue'
 import ProjectsApp from './components/apps/ProjectsApp.vue'
 import PhotoViewerApp from './components/apps/PhotoViewerApp.vue'
+import PongApp from './components/apps/PongApp.vue'
 
 import { useWindowStore } from './stores/windowStore'
 import { useMobileDetect } from './composables/useMobileDetect'
@@ -53,6 +54,38 @@ onMounted(() => {
 
   windowStore.layoutWindows()
   window.addEventListener('resize', () => windowStore.rescaleWindows())
+
+  // Easter egg console output
+  console.log(
+    '%c ██╗  ██╗███████╗██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗\n' +
+    ' ██║  ██║██╔════╝╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝\n' +
+    ' ███████║█████╗   ╚███╔╝ ██║     ██║   ██║██████╔╝█████╗  \n' +
+    ' ██╔══██║██╔══╝   ██╔██╗ ██║     ██║   ██║██╔══██╗██╔══╝  \n' +
+    ' ██║  ██║███████╗██╔╝ ██╗╚██████╗╚██████╔╝██║  ██║███████╗\n' +
+    ' ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝',
+    'color: #bb77ff; font-size: 10px; font-family: monospace;'
+  )
+  console.log(
+    '%c[HEXCORE OS v2.0.26] %cKernel loaded. All systems nominal.',
+    'color: #2dd4bf; font-weight: bold;',
+    'color: #a78bfa;'
+  )
+  console.log(
+    '%c> %cINTRUDER DETECTED... %cjust kidding. Welcome, curious one.',
+    'color: #ef4444;',
+    'color: #ef4444; font-weight: bold;',
+    'color: #a78bfa; font-style: italic;'
+  )
+  console.log(
+    '%c[WARN] %cUnauthorized access to this console may result in mass hexagon deployment.',
+    'color: #f59e0b; font-weight: bold;',
+    'color: #d4d4d8;'
+  )
+  console.log(
+    '%c> %cBuilt by Alexander Xie — https://github.com/sorrer',
+    'color: #2dd4bf;',
+    'color: #a78bfa;'
+  )
 })
 
 const shaderCode = ref<string>(HEXAGON_VERTEX_DARK)
@@ -123,6 +156,137 @@ const formattedUptime = computed(() => {
   return [h, m, s].map((n) => String(n).padStart(2, '0')).join(':')
 })
 
+// Konami code: up up down down left right left right b a
+const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']
+let konamiIndex = 0
+const konamiTriggered = ref(false)
+const konamiGlitch = ref(false)
+const konamiFalling = ref(false)
+const konamiDistort = ref(false)
+
+const konamiMessages = [
+  'WHAT HAVE YOU DONE',
+  'THIS WASN\'T SUPPOSED TO HAPPEN',
+  'SYSTEM INTEGRITY COMPROMISED',
+  'WHY WOULD YOU DO THIS',
+  'UNAUTHORIZED ACCESS DETECTED',
+  'HEXCORE HAS ENCOUNTERED AN ERROR',
+  'REALITY.DLL NOT FOUND',
+  'PLEASE STOP TOUCHING THINGS',
+  'ALERT: KONAMI BREACH',
+  'EXISTENCE IS PAIN',
+  'THE MATRIX HAS YOU',
+  'HELP',
+  '01001000 01000101 01001100 01010000',
+  'ERROR 0xDEAD',
+  'ABORT RETRY FAIL?',
+  'YOUR WARRANTY IS VOID',
+]
+
+interface FallingText {
+  id: number
+  text: string
+  x: number
+  y: number
+  speed: number
+  opacity: number
+  size: number
+  rotation: number
+}
+
+const fallingTexts = ref<FallingText[]>([])
+let fallingId = 0
+let fallingInterval: ReturnType<typeof setInterval> | null = null
+let fallingAnimId = 0
+
+function triggerKonami() {
+  if (konamiTriggered.value) return
+  konamiTriggered.value = true
+
+  // Rapid multi-pulse glitch
+  konamiGlitch.value = true
+  konamiDistort.value = true
+  setTimeout(() => {
+    konamiGlitch.value = false
+    setTimeout(() => {
+      konamiGlitch.value = true
+      setTimeout(() => {
+        konamiGlitch.value = false
+        setTimeout(() => {
+          konamiGlitch.value = true
+          setTimeout(() => {
+            konamiGlitch.value = false
+          }, 80)
+        }, 100)
+      }, 100)
+    }, 150)
+  }, 150)
+
+  konamiFalling.value = true
+  spawnFallingText()
+  fallingInterval = setInterval(spawnFallingText, 300)
+  animateFalling()
+}
+
+function spawnFallingText() {
+  const text = konamiMessages[Math.floor(Math.random() * konamiMessages.length)]
+  fallingTexts.value.push({
+    id: fallingId++,
+    text,
+    x: 5 + Math.random() * 80,
+    y: -5,
+    speed: 0.3 + Math.random() * 0.6,
+    opacity: 0.5 + Math.random() * 0.5,
+    size: 9 + Math.floor(Math.random() * 6),
+    rotation: (Math.random() - 0.5) * 30,
+  })
+  fallingTexts.value = fallingTexts.value.filter(t => t.y < 110)
+}
+
+function animateFalling() {
+  for (const t of fallingTexts.value) {
+    t.y += t.speed
+  }
+  if (konamiFalling.value) {
+    fallingAnimId = requestAnimationFrame(animateFalling)
+  }
+}
+
+function dismissKonami() {
+  konamiFalling.value = false
+  konamiDistort.value = false
+  konamiTriggered.value = false
+  fallingTexts.value = []
+  konamiIndex = 0
+  if (fallingInterval) {
+    clearInterval(fallingInterval)
+    fallingInterval = null
+  }
+  cancelAnimationFrame(fallingAnimId)
+}
+
+function onKonamiKeyDown(e: KeyboardEvent) {
+  if (e.key === KONAMI[konamiIndex]) {
+    konamiIndex++
+    if (konamiIndex === KONAMI.length) {
+      triggerKonami()
+      konamiIndex = 0
+    }
+  } else {
+    konamiIndex = e.key === KONAMI[0] ? 1 : 0
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onKonamiKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKonamiKeyDown)
+  cancelAnimationFrame(fallingAnimId)
+  if (fallingInterval) clearInterval(fallingInterval)
+})
+
 // Random hex strings that change slowly
 const hexStrings = ref(['A7F3', 'E0C2'])
 onMounted(() => {
@@ -141,9 +305,41 @@ onMounted(() => {
 <template>
   <div
     class="h-screen w-screen overflow-hidden relative"
-    :class="themeStore.theme === 'dark' ? 'dark' : ''"
+    :class="[themeStore.theme === 'dark' ? 'dark' : '', konamiDistort ? 'konami-distort' : '']"
     :data-theme="themeStore.theme === 'dark' ? 'dark' : ''"
   >
+    <!-- Konami: Full-screen glitch flash -->
+    <Transition name="glitch-flash">
+      <div v-if="konamiGlitch" class="konami-glitch-overlay" />
+    </Transition>
+
+    <!-- Konami: Falling text overlay -->
+    <div v-if="konamiFalling" class="fixed inset-0 z-[9999] pointer-events-none overflow-hidden font-lekton">
+      <div
+        v-for="t in fallingTexts"
+        :key="t.id"
+        class="absolute whitespace-nowrap tracking-widest konami-fall-text"
+        :style="{
+          left: t.x + '%',
+          top: t.y + '%',
+          opacity: t.opacity,
+          fontSize: t.size + 'px',
+          transform: 'rotate(' + t.rotation + 'deg)',
+        }"
+      >
+        {{ t.text }}
+      </div>
+
+      <!-- Dismiss button -->
+      <button
+        class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[10000] pointer-events-auto px-6 py-2 text-xs tracking-widest transition-all duration-200 cursor-pointer font-lekton"
+        style="border: 1px solid rgba(248, 113, 113, 0.5); color: #f87171; background: rgba(8, 5, 13, 0.9); text-shadow: 0 0 6px rgba(248, 113, 113, 0.4);"
+        @click="dismissKonami"
+      >
+        [ CLOSE THIS ]
+      </button>
+    </div>
+
     <!-- Block all mouse interactions during boot + loading (desktop only) -->
     <div v-if="!loadingComplete && !isMobile" class="fixed inset-0 z-[9998]" />
 
@@ -157,7 +353,7 @@ onMounted(() => {
 
     <!-- Wallpaper: shader -->
     <div class="h-full -z-40 absolute w-full opacity-[0.06] dark:opacity-[0.2]" :class="isMobile ? 'saturate-0 blur-sm' : ''">
-      <gl-canvas @update="() => {}" ref="canvas">
+      <gl-canvas v-if="shaderCode" @update="() => {}" ref="canvas">
         <gl-program name="main" :code="shaderCode"> </gl-program>
       </gl-canvas>
     </div>
@@ -212,6 +408,7 @@ onMounted(() => {
           <CareerLogApp v-if="win.id === 'experience'" />
           <ProjectsApp v-if="win.id === 'projects'" />
           <PhotoViewerApp v-if="win.id === 'photos'" />
+          <PongApp v-if="win.id === 'pong'" />
         </CyberWindow>
       </div>
 
@@ -272,5 +469,173 @@ body {
   background: #180f26;
   transition: background-color 0.5s ease;
   overflow: hidden;
+}
+
+/* Konami: continuous page distortion while active */
+.konami-distort {
+  animation: konami-page-distort 0.3s steps(2) infinite;
+}
+
+@keyframes konami-page-distort {
+  0% {
+    transform: translate(0, 0) skew(0deg, 0deg);
+    filter: hue-rotate(0deg) saturate(1.2) brightness(1);
+  }
+  10% {
+    transform: translate(-3px, 1px) skew(0.4deg, -0.2deg);
+    filter: hue-rotate(15deg) saturate(1.6) brightness(1.1);
+  }
+  20% {
+    transform: translate(2px, -2px) skew(-0.6deg, 0.3deg);
+    filter: hue-rotate(-20deg) saturate(1.8) brightness(0.9);
+  }
+  30% {
+    transform: translate(0, 3px) skew(0.2deg, 0.5deg);
+    filter: hue-rotate(30deg) saturate(1.4) brightness(1.15);
+  }
+  40% {
+    transform: translate(-4px, -1px) skew(-0.3deg, -0.4deg);
+    filter: hue-rotate(-10deg) saturate(2) brightness(0.85);
+  }
+  50% {
+    transform: translate(3px, 2px) skew(0.5deg, 0.1deg);
+    filter: hue-rotate(25deg) saturate(1.3) brightness(1.05);
+  }
+  60% {
+    transform: translate(-1px, -3px) skew(-0.4deg, 0.6deg);
+    filter: hue-rotate(-30deg) saturate(1.7) brightness(0.95);
+  }
+  70% {
+    transform: translate(4px, 0) skew(0.3deg, -0.5deg);
+    filter: hue-rotate(10deg) saturate(2.2) brightness(1.2);
+  }
+  80% {
+    transform: translate(-2px, 2px) skew(-0.5deg, 0.2deg);
+    filter: hue-rotate(-15deg) saturate(1.5) brightness(0.9);
+  }
+  90% {
+    transform: translate(1px, -1px) skew(0.6deg, -0.3deg);
+    filter: hue-rotate(20deg) saturate(1.9) brightness(1.1);
+  }
+  100% {
+    transform: translate(0, 0) skew(0deg, 0deg);
+    filter: hue-rotate(0deg) saturate(1.2) brightness(1);
+  }
+}
+
+/* Konami full-screen glitch flash overlay */
+.konami-glitch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  animation: konami-glitch 0.15s steps(4) forwards;
+}
+
+.konami-glitch-overlay::before,
+.konami-glitch-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.konami-glitch-overlay::before {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(248, 113, 113, 0.06) 2px,
+    rgba(248, 113, 113, 0.06) 4px
+  );
+  animation: konami-scanline-scroll 0.1s linear infinite;
+}
+
+.konami-glitch-overlay::after {
+  background: rgba(34, 211, 238, 0.08);
+  mix-blend-mode: screen;
+  animation: konami-color-split 0.12s steps(3) infinite;
+}
+
+@keyframes konami-scanline-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(4px); }
+}
+
+@keyframes konami-color-split {
+  0% { transform: translate(-3px, 0); background: rgba(248, 113, 113, 0.12); }
+  33% { transform: translate(3px, 1px); background: rgba(34, 211, 238, 0.1); }
+  66% { transform: translate(-1px, -1px); background: rgba(187, 119, 255, 0.12); }
+  100% { transform: translate(2px, 0); background: rgba(248, 113, 113, 0.08); }
+}
+
+@keyframes konami-glitch {
+  0% {
+    background: rgba(248, 113, 113, 0.2);
+    transform: translate(0) scaleY(1);
+    clip-path: inset(0 0 80% 0);
+  }
+  15% {
+    background: rgba(34, 211, 238, 0.15);
+    transform: translate(-6px, 3px) skewX(2deg) scaleY(1.01);
+    clip-path: inset(10% 0 30% 0);
+  }
+  30% {
+    background: rgba(187, 119, 255, 0.25);
+    transform: translate(5px, -2px) skewX(-1.5deg) scaleY(0.99);
+    clip-path: inset(40% 0 10% 0);
+  }
+  45% {
+    background: rgba(248, 113, 113, 0.15);
+    transform: translate(-3px, 5px) skewX(1deg);
+    clip-path: inset(20% 0 40% 0);
+  }
+  60% {
+    background: rgba(34, 211, 238, 0.2);
+    transform: translate(8px, -3px) skewX(-2deg) scaleY(1.02);
+    clip-path: inset(5% 0 60% 0);
+  }
+  75% {
+    background: rgba(187, 119, 255, 0.18);
+    transform: translate(-4px, 1px) skewX(0.8deg);
+    clip-path: inset(50% 0 5% 0);
+  }
+  90% {
+    background: rgba(248, 113, 113, 0.1);
+    transform: translate(2px, -4px) skewX(-0.5deg);
+    clip-path: inset(0);
+  }
+  100% {
+    background: rgba(187, 119, 255, 0.08);
+    transform: translate(0);
+    clip-path: inset(0);
+  }
+}
+
+.glitch-flash-enter-active {
+  animation: konami-glitch 0.15s steps(4);
+}
+.glitch-flash-leave-active {
+  animation: konami-glitch-out 0.08s ease-out;
+}
+
+@keyframes konami-glitch-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Falling text */
+.konami-fall-text {
+  color: #f87171;
+  text-shadow: 0 0 12px rgba(248, 113, 113, 0.6), 0 0 4px rgba(248, 113, 113, 0.4);
+}
+
+.konami-fall-text:nth-child(odd) {
+  color: #bb77ff;
+  text-shadow: 0 0 12px rgba(187, 119, 255, 0.6), 0 0 4px rgba(187, 119, 255, 0.4);
+}
+
+.konami-fall-text:nth-child(3n) {
+  color: #22d3ee;
+  text-shadow: 0 0 12px rgba(34, 211, 238, 0.6), 0 0 4px rgba(34, 211, 238, 0.4);
 }
 </style>

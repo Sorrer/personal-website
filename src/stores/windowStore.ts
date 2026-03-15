@@ -23,6 +23,7 @@ export interface WindowState {
   position: { x: number; y: number }
   size: { width: number; height: number }
   defaultSize: { width: number; height: number }
+  hideFromTaskbar?: boolean
   referenceRect?: Rect
   referenceViewport?: Viewport
 }
@@ -105,6 +106,21 @@ export const useWindowStore = defineStore('windowStore', () => {
       position: { x: 0, y: 0 },
       size: { width: 1095, height: 650 },
       defaultSize: { width: 1095, height: 650 },
+    },
+    pong: {
+      id: 'pong',
+      title: 'PONG.EXE',
+      isOpen: false,
+      isMinimized: false,
+      isMaximized: false,
+      isFocused: false,
+      isLoading: false,
+      loadingProgress: 0,
+      zIndex: nextZIndex++,
+      position: { x: 0, y: 0 },
+      size: { width: 600, height: 480 },
+      defaultSize: { width: 600, height: 480 },
+      hideFromTaskbar: true,
     },
   })
 

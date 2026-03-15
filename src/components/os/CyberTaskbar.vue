@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useWindowStore } from '../../stores/windowStore'
-import { useThemeStore } from '../../stores/themeStore'
 import IconHexagon from '../../assets/icons/IconHexagon.vue'
-import IconLightBulb from '../../assets/icons/IconLightBulb.vue'
 
 const emit = defineEmits<{
   restart: []
 }>()
 
 const windowStore = useWindowStore()
-const themeStore = useThemeStore()
 
 const clock = ref('00:00:00')
 let clockInterval: ReturnType<typeof setInterval> | null = null
@@ -66,6 +63,10 @@ onUnmounted(() => {
   if (clockInterval) clearInterval(clockInterval)
   document.removeEventListener('mousedown', onClickOutside)
 })
+
+const taskbarWindows = computed(() =>
+  windowStore.windowList.filter(w => !w.hideFromTaskbar)
+)
 
 function handleAppClick(id: string) {
   const win = windowStore.windows[id]
@@ -144,7 +145,7 @@ function handleAppClick(id: string) {
     <!-- App Buttons -->
     <div class="flex items-center gap-1 flex-1 overflow-x-auto">
       <button
-        v-for="win in windowStore.windowList"
+        v-for="win in taskbarWindows"
         :key="win.id"
         @click="handleAppClick(win.id)"
         class="taskbar-app-btn flex items-center gap-2 px-3 h-8 rounded text-xs font-lekton tracking-wide transition-all duration-200 whitespace-nowrap shrink-0"
@@ -164,16 +165,6 @@ function handleAppClick(id: string) {
     <!-- System Tray -->
     <div class="flex items-center gap-3 ml-2">
       <div class="w-px h-6 bg-studio-700/50"></div>
-
-      <!-- Theme Toggle -->
-      <button
-        @click="themeStore.toggleTheme()"
-        class="w-7 h-7 flex items-center justify-center rounded hover:bg-studio-800/60 transition-colors cursor-pointer"
-        :class="themeStore.theme === 'light' ? 'ring-1 ring-bright-500/50' : ''"
-        :title="themeStore.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-      >
-        <IconLightBulb class="w-4 h-4 stroke-studio-400 hover:stroke-studio-200 transition-colors" :class="themeStore.theme === 'light' ? 'stroke-bright-400' : ''" />
-      </button>
 
       <!-- Connection Status -->
       <div class="flex items-center gap-1.5" title="System Online">
@@ -216,14 +207,6 @@ body[data-theme="light"] .cyber-taskbar .font-lekton {
 
 body[data-theme="light"] .cyber-taskbar .bg-bright-400 {
   background-color: #1f898c;
-}
-
-body[data-theme="light"] .cyber-taskbar .stroke-studio-400 {
-  stroke: #7d4bb9;
-}
-
-body[data-theme="light"] .cyber-taskbar .hover\:bg-studio-800\/60:hover {
-  background: rgba(140, 91, 204, 0.15);
 }
 
 body[data-theme="light"] .cyber-taskbar .bg-purple-800\/50 {
