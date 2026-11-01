@@ -4,7 +4,7 @@
 # Usage: CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... ./scripts/upload-photos.sh
 set -euo pipefail
 
-BUCKET="${PHOTO_BUCKET:-alexanderlx-photos}"
+BUCKET="${PHOTO_BUCKET:-personal-website-images}"
 PHOTO_DIR="src/assets/photos"
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
