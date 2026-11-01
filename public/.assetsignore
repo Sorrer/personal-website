@@ -1,0 +1,15 @@
+# Never upload images to the Worker — photos are served from R2 via the Cloudflare CDN
+images/
+*.jpg
+*.JPG
+*.jpeg
+*.JPEG
+*.png
+*.PNG
+*.gif
+*.GIF
+*.webp
+*.WEBP
+*.avif
+*.AVIF
+*:Zone.Identifier

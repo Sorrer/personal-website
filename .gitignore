@@ -30,4 +30,5 @@ coverage
 *.tsbuildinfo
 dist*.zip
 dist.zip
+build.zip
 distServer

@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "alexanderlx",
+  "compatibility_date": "2026-10-01",
+  // Static site only: no Worker script, just the Vite build output.
+  // Photos are not part of this — they're served from R2 through the Cloudflare CDN
+  // (see VITE_PHOTO_BASE_URL in .env.production and public/.assetsignore).
+  "assets": {
+    "directory": "./dist/client",
+    "not_found_handling": "single-page-application"
+  }
+}

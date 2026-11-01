@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+import photoManifest from 'virtual:photo-manifest'
 
 interface Photo {
   thumbUrl: string
@@ -21,29 +22,25 @@ interface PhotoLoadState {
   displayUrl: string
 }
 
-// Auto-discover full-res photos (exclude thumbs/)
-const fullModules = import.meta.glob(
-  ['@/assets/photos/**/*.{jpg,jpeg,png,gif,webp,JPG,JPEG,PNG,GIF,WEBP}', '!@/assets/photos/**/thumbs/**'],
-  { eager: true, query: '?url', import: 'default' }
-) as Record<string, string>
+// Photos aren't bundled — the manifest lists paths under src/assets/photos, which are
+// served from the CDN in production and by the Vite dev server at /photos locally
+const photoBase = (import.meta.env.VITE_PHOTO_BASE_URL || '/photos').replace(/\/$/, '')
+const photoUrl = (rel: string) => `${photoBase}/${rel.split('/').map(encodeURIComponent).join('/')}`
 
-// Auto-discover thumbnails
-const thumbModules = import.meta.glob(
-  '@/assets/photos/**/thumbs/*.{jpg,jpeg,png,gif,webp,JPG,JPEG,PNG,GIF,WEBP}',
-  { eager: true, query: '?url', import: 'default' }
-) as Record<string, string>
+const isThumb = (rel: string) => rel.split('/').includes('thumbs')
+const fullPaths = photoManifest.filter((rel) => !isThumb(rel))
 
 // Build a map of lowercase base name -> thumb URL for matching
 const thumbMap = new Map<string, string>()
-for (const [path, url] of Object.entries(thumbModules)) {
-  // path like: /src/assets/photos/China 2025/thumbs/guangzhou-opera-house.jpg
-  const filename = path.split('/').pop() || ''
+for (const rel of photoManifest.filter(isThumb)) {
+  // rel like: China 2025/thumbs/guangzhou-opera-house.jpg
+  const filename = rel.split('/').pop() || ''
   const baseName = filename.replace(/\.[^.]+$/, '').toLowerCase()
   // Include the folder in the key to avoid collisions across folders
-  const parts = path.split('/')
+  const parts = rel.split('/')
   const thumbsIdx = parts.indexOf('thumbs')
   const folder = thumbsIdx > 0 ? parts[thumbsIdx - 1] : ''
-  thumbMap.set(`${folder}::${baseName}`, url)
+  thumbMap.set(`${folder}::${baseName}`, photoUrl(rel))
 }
 
 function kebabToCaption(filename: string): string {
@@ -65,12 +62,11 @@ function parseFolderName(raw: string): { sortKey: number; display: string } {
 const groupedPhotos: PhotoGroup[] = (() => {
   const groups = new Map<string, Photo[]>()
 
-  for (const [path, url] of Object.entries(fullModules)) {
-    // path like: /src/assets/photos/3 China 2025/guangzhou-opera-house.JPG
-    const parts = path.split('/')
-    const photosIdx = parts.indexOf('photos')
-    // The folder is the segment right after "photos"
-    const folder = photosIdx >= 0 && photosIdx + 2 < parts.length ? parts[photosIdx + 1] : 'Unsorted'
+  for (const rel of fullPaths) {
+    // rel like: 3 China 2025/guangzhou-opera-house.JPG
+    const url = photoUrl(rel)
+    const parts = rel.split('/')
+    const folder = parts.length >= 2 ? parts[0] : 'Unsorted'
     const filename = parts.pop() || ''
     const baseName = filename.replace(/\.[^.]+$/, '').toLowerCase()
 
